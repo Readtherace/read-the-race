@@ -95,6 +95,22 @@ requires (see each framework's Permanent record section) — the CSV is just
 that record made queryable. `entry_id` format: `YYYYMMDD-<slug>-<HHMM>`.
 `entry_file` is the relative path to the full entry markdown file.
 
+### Entry write-up style
+
+Keep entry bodies short. The frontmatter already carries the formal
+Permanent record fields — the body's job is just to show the framework was
+actually applied, not to narrate every stage for every runner.
+
+- **Eliminated runners:** one line each — the stage and the reason, nothing
+  more. `**Runner** — eliminated, Stage 2.<n>: reason in one clause.`
+- **Survivors:** three to four lines each — current ability/form, the
+  suitability question (if any), and the ranking factor that placed it
+  where it landed. No sub-headers per runner, no stage-by-stage narration.
+- **Verdict block:** one compact block at the end carries Stage 4
+  (selection, confidence, strongest reason, principal risk, uncertain
+  evidence) and Stage 5–7 (price, implied probability, publishing band,
+  whether it qualifies for action, each way if relevant).
+
 ### Entry file template — horses
 
 ```markdown
@@ -121,13 +137,22 @@ process_compliance_grade: ""
 operator_disagreement: ""
 ---
 
-## Stage 1: Race suitability
-## Stage 2: Hard eliminations
-## Stage 3: Rank the survivors
-## Stage 4: Selection
-## Stage 5: Price policy
-## Stage 6: No qualifying action (if applicable)
-## Stage 7: Each way (if applicable)
+## Field
+
+- **Runner** — eliminated, Stage 2.<n>: reason in one clause.
+- **Runner** — three to four lines: current ability/form, suitability, the
+  ranking factor that placed it here, anything held against it.
+
+## Verdict
+
+- **Selection:**
+- **Confidence:** high / medium / low
+- **Strongest reason:**
+- **Principal risk:**
+- **Uncertain at commitment:**
+- **Price:** decimal | **Implied probability:** % | **4/1–6/1 band:** yes/no
+- **Qualifies for action:** yes/no (price policy)
+- **Each way:** n/a, or the case for it at 6.00+
 ```
 
 ### Entry file template — greyhounds
@@ -156,14 +181,28 @@ operator_disagreement: ""
 vacancy_testing_record: ""
 ---
 
-## Stage 0: Trap grid
-## Stage 1: Race suitability
-## Stage 2: Hard eliminations
-## Stage 3: Rank the survivors
-## Stage 4: Selection
-## Stage 5: Price policy
-## Stage 6: No qualifying action (if applicable)
-## Stage 7: Each way (if applicable)
+## Trap grid
+
+> T1 ?, T2 ?, T3 ?, T4 ?, T5 ?, T6 ?
+
+## Field
+
+- **Runner (Tn)** — eliminated, Stage 2.<n>: reason in one clause.
+- **Runner (Tn)** — three to four lines: first-bend projection/early pace,
+  calculated time, the ranking factor that placed it here, anything held
+  against it.
+
+## Verdict
+
+- **Selection:**
+- **Confidence:** high / medium / low
+- **Strongest reason:**
+- **Principal risk:**
+- **Uncertain at commitment:**
+- **Price:** decimal | **Implied probability:** % | **4/1–6/1 band:** yes/no
+- **Qualifies for action:** yes/no (price policy)
+- **Each way:** n/a, or the case for it at 6.00+
+- **Vacancy testing record:** n/a, or the Stage 0b checklist if a trap was vacant
 ```
 
 ---
