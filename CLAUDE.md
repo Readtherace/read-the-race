@@ -375,6 +375,22 @@ Treat 100 as an initial assessment rather than proof. It remains a small sample 
 
 ---
 
+## Source and copyright rules
+
+The record is public, permanent and timestamped, so published entries are held to a higher standard than private analysis.
+
+**Do not reproduce third party content.** This includes commercial form providers' written commentary and verdicts, their proprietary ratings and speed figures, and their form tables reproduced as tables.
+
+**Facts may be stated.** Course, date, race time, distance, surface, going, class, official ratings as published by the regulator, weights, draw, headgear declarations, finishing positions and starting prices are matters of record and may be stated as facts.
+
+**Published entries must read as original reasoning.** Every entry states the framework's assessment and conclusion in the operator's own words. Where a third party figure informed a judgement, state the judgement, not the figure.
+
+Do not paste raw card extracts into a published entry. Analyse from them, then write the assessment.
+
+If in doubt about whether something is a fact of record or a provider's proprietary work, omit it.
+
+---
+
 ## Language rules
 
 Use "the framework selects", "under this method", "the qualifying runner is".
@@ -515,7 +531,11 @@ A slow starter drawn inside quick starters is exposed to crowding. A quick start
 
 The importance of an early deficit depends on track configuration, distance and likely interference. **Do not apply a fixed distance threshold.**
 
-**3. Calculated time as the speed anchor**, adjusted for the published going allowance where available.
+**3. Calculated time as the speed anchor.**
+
+**Use the calculated time as published on the card. Do not recompute it from the raw time and the going allowance.** The going adjustment has already been applied by the official timekeeper. Recomputing it risks applying the sign convention backwards, which would invert the speed anchor for every runner.
+
+Where a manual going adjustment is genuinely unavoidable, verify the sign convention empirically first, against an actual published result showing raw winning time, going allowance and calculated time together. Do not rely on a secondary description of the convention. Record the verification and its date.
 
 Calculated time is not necessarily an independently recorded finishing time for each greyhound. Where only the winner is timed, other calculated times are derived from beaten distances. GBGB calculations use 0.08 seconds per length in the circumstances set out in Rule 139. Do not present 0.08 as a perfect physical conversion applying identically to every greyhound, track and situation.
 
@@ -666,6 +686,22 @@ Field 13 is recorded but never acted on within the entry. It is reviewed only at
 Scheduled review after the first 100 recorded selections. Do not amend predictive rules before then.
 
 Treat 100 as an initial assessment rather than proof. It remains a small sample, and the vacancy sub sample will be smaller still.
+
+---
+
+## Source and copyright rules
+
+The record is public, permanent and timestamped, so published entries are held to a higher standard than private analysis.
+
+**Do not reproduce third party content.** This includes commercial form providers' written commentary and verdicts, their proprietary ratings and speed figures, and their form tables reproduced as tables.
+
+**Facts may be stated.** Track, date, race time, distance, grade, going allowance, trap grid, finishing positions, official times, starting prices and published race remarks are matters of record and may be stated as facts.
+
+**Published entries must read as original reasoning.** Every entry states the framework's assessment and conclusion in the operator's own words. Where a third party figure informed a judgement, state the judgement, not the figure.
+
+Do not paste raw card extracts into a published entry. Analyse from them, then write the assessment.
+
+If in doubt about whether something is a fact of record or a provider's proprietary work, omit it.
 
 ---
 

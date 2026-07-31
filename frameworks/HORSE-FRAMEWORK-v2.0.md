@@ -203,6 +203,22 @@ Treat 100 as an initial assessment rather than proof. It remains a small sample 
 
 ---
 
+## Source and copyright rules
+
+The record is public, permanent and timestamped, so published entries are held to a higher standard than private analysis.
+
+**Do not reproduce third party content.** This includes commercial form providers' written commentary and verdicts, their proprietary ratings and speed figures, and their form tables reproduced as tables.
+
+**Facts may be stated.** Course, date, race time, distance, surface, going, class, official ratings as published by the regulator, weights, draw, headgear declarations, finishing positions and starting prices are matters of record and may be stated as facts.
+
+**Published entries must read as original reasoning.** Every entry states the framework's assessment and conclusion in the operator's own words. Where a third party figure informed a judgement, state the judgement, not the figure.
+
+Do not paste raw card extracts into a published entry. Analyse from them, then write the assessment.
+
+If in doubt about whether something is a fact of record or a provider's proprietary work, omit it.
+
+---
+
 ## Language rules
 
 Use "the framework selects", "under this method", "the qualifying runner is".
