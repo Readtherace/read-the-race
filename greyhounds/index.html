@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Greyhounds — Read The Race</title>
+<meta name="description" content="Greyhound racing analysis running record, applied with the Read The Race greyhound framework v2.0.">
+<link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <a class="site-title" href="../index.html">Read <span>The</span> Race</a>
+    <p class="site-tagline">Greyhounds</p>
+    <nav class="site-nav">
+      <a href="../index.html">Home</a>
+      <a href="../horses/index.html">Horses</a>
+      <a href="index.html" class="active">Greyhounds</a>
+    </nav>
+  </div>
+</header>
+
+<main class="container">
+
+  <div class="notice">
+    <strong>18+. Educational racing analysis only.</strong> Gambling involves
+    financial risk. This site does not accept stakes or provide bookmaker
+    services. Analysis is AI-assisted.
+  </div>
+
+  <h1>Greyhounds</h1>
+  <p class="lede">
+    Every entry below follows the <a href="framework.html">greyhound
+    framework v2.0</a> in full: the trap grid stated as a data integrity
+    precondition, race suitability, hard eliminations, a weighted ranking
+    led by first bend projection and early pace, then a named selection
+    with a confidence grade, and price policy applied only after the
+    selection is made.
+  </p>
+
+  <h2>Running record</h2>
+  <div id="running-record"></div>
+
+  <h2>Entries by date</h2>
+  <div id="date-browser"></div>
+
+</main>
+
+<footer class="site-footer">
+  <p><strong>18+. Educational racing analysis only.</strong> Gambling
+  involves financial risk. This site does not accept stakes or provide
+  bookmaker services. Analysis is AI-assisted. No bookmaker names or logos.
+  No stakes, returns or profit and loss are reported — only strike rate,
+  as numerator and denominator.</p>
+</footer>
+
+<script src="../assets/js/csv.js"></script>
+<script src="../assets/js/markdown.js"></script>
+<script src="../assets/js/site.js"></script>
+<script>
+  (async () => {
+    const rows = await loadCSVRows("results.csv");
+    renderRunningRecord(document.getElementById("running-record"), rows, "track");
+
+    const entries = await loadJSON("entries/manifest.json");
+    renderDateBrowser(document.getElementById("date-browser"), entries, "entries");
+  })();
+</script>
+
+</body>
+</html>

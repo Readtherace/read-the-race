@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Read The Race</title>
+<meta name="description" content="Educational racing analysis for horses and greyhounds, applied with two locked, versioned frameworks and a public, append-only record.">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <a class="site-title" href="index.html">Read <span>The</span> Race</a>
+    <p class="site-tagline">A locked method, a public record.</p>
+    <nav class="site-nav">
+      <a href="index.html" class="active">Home</a>
+      <a href="horses/index.html">Horses</a>
+      <a href="greyhounds/index.html">Greyhounds</a>
+    </nav>
+  </div>
+</header>
+
+<main class="container">
+
+  <div class="notice">
+    <strong>18+. Educational racing analysis only.</strong> Gambling involves
+    financial risk. This site does not accept stakes or provide bookmaker
+    services. Analysis is AI-assisted.
+  </div>
+
+  <p class="lede">
+    Two locked, versioned frameworks — one for horses, one for greyhounds —
+    applied the same way every time, recorded before the result is known,
+    and kept in the public record whether the selection wins or loses.
+    Performance is reported as a strike rate with the numerator and
+    denominator shown, never a bare percentage.
+  </p>
+
+  <h2>Horses</h2>
+  <div id="horses-summary"></div>
+  <p><a href="horses/index.html">Full running record and framework →</a></p>
+
+  <h2>Greyhounds</h2>
+  <div id="greyhounds-summary"></div>
+  <p><a href="greyhounds/index.html">Full running record and framework →</a></p>
+
+  <h2>About the method</h2>
+  <p>
+    Read The Race exists because most racing "tips" are unfalsifiable: the
+    reasoning changes after the result, losing calls quietly disappear, and
+    there's no way to check whether the method actually works. This site
+    writes the method down, locks it before selections are made, and keeps
+    every entry in the record — win or lose.
+  </p>
+  <p><a href="README.md">Read the full explanation of the method →</a></p>
+
+</main>
+
+<footer class="site-footer">
+  <p><strong>18+. Educational racing analysis only.</strong> Gambling
+  involves financial risk. This site does not accept stakes or provide
+  bookmaker services. Analysis is AI-assisted. No bookmaker names or logos.
+  No stakes, returns or profit and loss are reported — only strike rate,
+  as numerator and denominator.</p>
+</footer>
+
+<script src="assets/js/csv.js"></script>
+<script src="assets/js/site.js"></script>
+<script>
+  (async () => {
+    const horseRows = await loadCSVRows("horses/results.csv");
+    renderRunningRecordSummary(document.getElementById("horses-summary"), horseRows);
+
+    const greyhoundRows = await loadCSVRows("greyhounds/results.csv");
+    renderRunningRecordSummary(document.getElementById("greyhounds-summary"), greyhoundRows);
+  })();
+</script>
+
+</body>
+</html>

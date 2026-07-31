@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Horse framework v2.0 — Read The Race</title>
+<meta name="description" content="The locked, versioned framework applied to every horse racing entry on Read The Race.">
+<link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <a class="site-title" href="../index.html">Read <span>The</span> Race</a>
+    <p class="site-tagline">Horses — framework</p>
+    <nav class="site-nav">
+      <a href="../index.html">Home</a>
+      <a href="index.html" class="active">Horses</a>
+      <a href="../greyhounds/index.html">Greyhounds</a>
+    </nav>
+  </div>
+</header>
+
+<main class="container">
+
+  <div class="notice">
+    <strong>18+. Educational racing analysis only.</strong> Gambling involves
+    financial risk. This site does not accept stakes or provide bookmaker
+    services. Analysis is AI-assisted.
+  </div>
+
+  <a class="source-link" href="../frameworks/HORSE-FRAMEWORK-v2.0.md">View the published source file →</a>
+
+  <div id="framework-content" class="prose">
+    <div class="empty-state">Loading framework…</div>
+  </div>
+
+</main>
+
+<footer class="site-footer">
+  <p><strong>18+. Educational racing analysis only.</strong> Gambling
+  involves financial risk. This site does not accept stakes or provide
+  bookmaker services. Analysis is AI-assisted.</p>
+</footer>
+
+<script src="../assets/js/csv.js"></script>
+<script src="../assets/js/markdown.js"></script>
+<script src="../assets/js/site.js"></script>
+<script>
+  loadFrameworkInto(document.getElementById("framework-content"), "../frameworks/HORSE-FRAMEWORK-v2.0.md");
+</script>
+
+</body>
+</html>
