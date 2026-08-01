@@ -20,6 +20,15 @@ predictive rule outside those two paths, push back and point to the
 Overfitting rule. Full text of all of this lives in the framework files —
 see below.
 
+**Retracting an entry** (removing a row from `results.csv` entirely) is
+different from a material-change reopening, and far rarer: it's only for
+an entry that fails a basic data-integrity requirement — e.g. one
+committed after the result was already known, so it never satisfied
+"before the race" in the first place. Never retract for losing. Log every
+retraction in `RETRACTIONS.md` at the repo root with the date and reason,
+and mark the original entry file (kept, not deleted) with a retraction
+notice — see that file for the format and the one existing example.
+
 **This file is a fast operational index, not the framework.** It inlines
 only the rules that must never be skipped regardless of how much context is
 loaded: eliminators, confidence rules, price rules, language rules,

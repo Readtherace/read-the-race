@@ -19,7 +19,18 @@ principal_risk: "Pace, race shape and draw could not be assessed from facts avai
 material_change: "No"
 process_compliance_grade: A
 operator_disagreement: "None recorded at commitment."
+retracted: "Yes"
+retracted_date: 2026-08-01
 ---
+
+> **Retracted, 1 August 2026.** This entry was committed after the 14:25
+> Goodwood race had already been run — a test entry made during initial
+> site setup, not a genuine pre-race commitment. It has been removed from
+> `horses/results.csv` and `horses/entries/manifest.json`, and no longer
+> counts in the running record. **It was not retracted because it lost** —
+> see [`RETRACTIONS.md`](../../../../RETRACTIONS.md) at the repo root for
+> the full reasoning. The original analysis is kept below, unedited, for
+> the audit trail.
 
 ## Field
 

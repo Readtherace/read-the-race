@@ -42,6 +42,24 @@ function resultClass(result) {
   return "result-lose";
 }
 
+/*
+ * Whether an entry qualifies for action under the Stage 5 price policy:
+ * a selection was named AND the recorded price is 2.00 or above. This is
+ * independent of whether the result is known yet — qualification is
+ * decided at commitment, not at settlement.
+ */
+function qualifiesForAction(row) {
+  const hasSelection = !!(row.selection && row.selection.trim());
+  const pb = computePriceBlock(row.price_at_commitment);
+  return hasSelection && pb.qualifies === true;
+}
+
+/* Extracts the race off-time from entry_id's YYYYMMDD-<slug>-HHMM suffix. */
+function raceTimeFromEntryId(entryId) {
+  const m = /-(\d{2})(\d{2})$/.exec(entryId || "");
+  return m ? `${m[1]}:${m[2]}` : "";
+}
+
 /* Renders the stat-tile summary + full table for one sport's results.csv rows. */
 function renderRunningRecord(el, rows, venueKey) {
   if (!rows.length) {
@@ -50,26 +68,30 @@ function renderRunningRecord(el, rows, venueKey) {
   }
 
   let wins = 0;
+  let decided = 0; // qualifying entries with a settled win/lose result — strike-rate denominator
   let qualifying = 0;
   let noAction = 0;
-  let pending = 0;
 
   rows.forEach((r) => {
-    const k = classifyResult(r.result);
-    if (k === "win") { wins++; qualifying++; }
-    else if (k === "lose" || k === "void") { qualifying++; }
-    else if (k === "no-action") { noAction++; }
-    else { pending++; }
+    if (qualifiesForAction(r)) {
+      qualifying++;
+      const k = classifyResult(r.result);
+      if (k === "win") { wins++; decided++; }
+      else if (k === "lose") { decided++; }
+      // void and pending (result not yet known) don't count toward strike rate
+    } else {
+      noAction++;
+    }
   });
 
-  const pct = qualifying > 0 ? Math.round((wins / qualifying) * 1000) / 10 : null;
-  const strikeRateText = qualifying > 0
-    ? `${wins}/${qualifying}${pct !== null ? ` (${pct}%)` : ""}`
+  const pct = decided > 0 ? Math.round((wins / decided) * 1000) / 10 : null;
+  const strikeRateText = decided > 0
+    ? `${wins}/${decided}${pct !== null ? ` (${pct}%)` : ""}`
     : "0/0";
 
   const sorted = rows.slice().sort((a, b) => {
-    const da = `${a.date || ""} ${a.time_of_commitment || ""}`;
-    const db = `${b.date || ""} ${b.time_of_commitment || ""}`;
+    const da = `${a.date || ""} ${raceTimeFromEntryId(a.entry_id)}`;
+    const db = `${b.date || ""} ${raceTimeFromEntryId(b.entry_id)}`;
     return db.localeCompare(da);
   });
 
@@ -83,14 +105,23 @@ function renderRunningRecord(el, rows, venueKey) {
 
   const rowsHtml = sorted.map((r) => {
     const venue = r[venueKey] || "";
+    const raceTime = raceTimeFromEntryId(r.entry_id);
+    const pb = computePriceBlock(r.price_at_commitment);
+    const qualifies = qualifiesForAction(r);
+    const eachWay = pb.price !== null ? (pb.eachWayEligible ? "Yes" : "No") : "—";
+    const selectionHtml = qualifies
+      ? mdEscape(r.selection || "")
+      : `<span class="no-action-label">No qualifying action</span><span class="no-action-runner">${mdEscape(r.selection || "")}</span>`;
+
     return `<tr>
       <td>${mdEscape(r.date || "")}</td>
+      <td class="price-cell">${mdEscape(raceTime)}</td>
       <td>${mdEscape(venue)}</td>
-      <td>${mdEscape(r.selection || "")}</td>
-      <td>${mdEscape(r.confidence || "")}</td>
-      <td>${mdEscape(r.price_at_commitment || "")}</td>
-      <td>${mdEscape(r.starting_price || "")}</td>
+      <td class="selection-cell">${selectionHtml}</td>
+      <td class="price-cell">${pb.price !== null ? pb.price.toFixed(2) : "—"}</td>
+      <td>${eachWay}</td>
       <td class="${resultClass(r.result)}">${mdEscape(r.result || "pending")}</td>
+      <td>${mdEscape(r.confidence || "")}</td>
     </tr>`;
   }).join("");
 
@@ -99,8 +130,8 @@ function renderRunningRecord(el, rows, venueKey) {
       <table>
         <thead>
           <tr>
-            <th>Date</th><th>${venueKey === "track" ? "Track" : "Course"}</th><th>Selection</th>
-            <th>Confidence</th><th>Price</th><th>SP</th><th>Result</th>
+            <th>Date</th><th>Race Time</th><th>${venueKey === "track" ? "Track" : "Course"}</th>
+            <th>Selection</th><th>Price</th><th>Each Way</th><th>Result</th><th>Confidence</th>
           </tr>
         </thead>
         <tbody>${rowsHtml}</tbody>
@@ -117,14 +148,15 @@ function renderRunningRecordSummary(el, rows) {
     return;
   }
   let wins = 0;
-  let qualifying = 0;
+  let decided = 0;
   rows.forEach((r) => {
+    if (!qualifiesForAction(r)) return;
     const k = classifyResult(r.result);
-    if (k === "win") { wins++; qualifying++; }
-    else if (k === "lose" || k === "void") { qualifying++; }
+    if (k === "win") { wins++; decided++; }
+    else if (k === "lose") { decided++; }
   });
-  const pct = qualifying > 0 ? Math.round((wins / qualifying) * 1000) / 10 : null;
-  const strikeRateText = qualifying > 0 ? `${wins}/${qualifying}${pct !== null ? ` (${pct}%)` : ""}` : "0/0";
+  const pct = decided > 0 ? Math.round((wins / decided) * 1000) / 10 : null;
+  const strikeRateText = decided > 0 ? `${wins}/${decided}${pct !== null ? ` (${pct}%)` : ""}` : "0/0";
 
   el.innerHTML = `
     <div class="stat-row">

@@ -5,6 +5,7 @@
   --bg-raised: #14171b;
   --bg-card: #181c21;
   --border: #262b31;
+  --row-divider: #383f47;
   --text: #e7e9ec;
   --text-dim: #9aa2ad;
   --text-faint: #6b7280;
@@ -253,6 +254,7 @@ hr {
 
 .table-scroll {
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
   border: 1px solid var(--border);
   border-radius: var(--radius);
   margin-bottom: 20px;
@@ -261,15 +263,20 @@ hr {
 table {
   border-collapse: collapse;
   width: 100%;
-  min-width: 560px;
+  min-width: 700px;
   font-size: 0.88rem;
 }
 
 th, td {
   text-align: left;
-  padding: 9px 12px;
-  border-bottom: 1px solid var(--border);
+  padding: 15px 14px;
+  border-bottom: 1px solid var(--row-divider);
   white-space: nowrap;
+}
+
+td.selection-cell {
+  white-space: normal;
+  min-width: 160px;
 }
 
 th {
@@ -284,6 +291,26 @@ th {
 
 tr:last-child td {
   border-bottom: none;
+}
+
+/* Numeric columns: right-aligned, tabular monospace figures so digits line up. */
+.price-cell {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+.no-action-label {
+  display: block;
+  color: var(--text-dim);
+  font-weight: 600;
+}
+
+.no-action-runner {
+  display: block;
+  margin-top: 3px;
+  font-size: 0.78rem;
+  color: var(--text-faint);
 }
 
 .result-win { color: var(--win); font-weight: 600; }
