@@ -84,6 +84,13 @@ read-the-race/
 6. Follow the Language rules and Source/copyright rules below, everywhere.
 7. Every entry needs a **complete Price section** (see Price rules below).
    An entry missing it is incomplete and must not be committed.
+8. **Once the result is known**, fill in `result` (and `starting_price` if
+   available) in all three places: the entry file's frontmatter, the CSV
+   row, and the manifest.json entry. This is completing a field that was
+   deliberately left blank at commitment, not editing the record — the
+   append-only/no-edit rule protects the pre-race reasoning (selection,
+   confidence, price at commitment, principal risk), not these two fields.
+   Never touch anything else in an existing row or entry file.
 
 ### CSV columns
 

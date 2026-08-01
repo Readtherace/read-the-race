@@ -14,7 +14,7 @@ selection: Talk Of New York
 confidence: Medium
 price_at_commitment: 1.36
 starting_price: ""
-result: ""
+result: "Lost"
 principal_risk: "Pace, race shape and draw could not be assessed from facts available at commitment; also untested whether Group 1-class form translates cleanly into pressing Group 3 favouritism."
 material_change: "No"
 process_compliance_grade: A
