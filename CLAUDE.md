@@ -258,9 +258,9 @@ as uncertainty, never as a negative.
 - **High:** clear advantage across the leading ranking factors, no
   important suitability question, no major tactical contradiction.
 - **Medium:** ranks first, but the advantage is narrow or one meaningful
-  uncertainty remains.
-- **Low:** depends on unproven conditions, uncertain race shape /
-  first-bend projection, or several unresolved factors.
+  **race-specific** uncertainty remains.
+- **Low:** depends on unproven conditions or several unresolved
+  **race-specific** factors.
 - Confidence reflects the quality and completeness of the evidence,
   **never the price**.
 - If the leading two are essentially inseparable, record **no clear
@@ -271,6 +271,19 @@ Ceilings that cap confidence regardless of the above:
 - Greyhounds only: low-grade race (A9/A10 and equivalent) → capped at
   **medium**.
 - Unproven-evidence selection (see Eliminators) → capped at **low**.
+
+**Definitional correction, 1 August 2026 (horses only — emergency
+correction exception, not a predictive rule change).** Pace, race shape
+and draw are structurally unassessable at commitment under this project's
+sourcing rules (no proprietary commentary, no in-running video), every
+time, regardless of the race. Counting that as "one meaningful
+uncertainty" would cap every horse entry at medium or below and make the
+confidence field uninformative, so it is recorded as a known structural
+gap and does **not** count against confidence — see the horse framework
+for the full note. This does **not** apply to greyhound first bend
+projection, which is built from Stage 0's trap grid plus each runner's
+own recorded history, genuinely varies race to race, and continues to
+count as race-specific uncertainty under Low.
 
 ## Price rules (Stage 5–7)
 

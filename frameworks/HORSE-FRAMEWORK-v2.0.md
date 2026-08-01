@@ -2,6 +2,7 @@
 
 **Effective 31 July 2026. Supersedes the 13 July 2026 framework.**
 **Status: LOCKED. Scheduled review after the first 100 recorded selections.**
+**Definitional correction 1 August 2026 (emergency correction exception): Stage 4 confidence — see note under Confidence definitions.**
 
 ---
 
@@ -91,10 +92,25 @@ If the leading two are essentially inseparable, record **no clear selection**.
 **Confidence definitions:**
 
 - **High:** one runner holds a clear advantage across the leading ranking factors, with no important suitability question and no major tactical contradiction.
-- **Medium:** one runner ranks first, but the advantage is narrow or one meaningful uncertainty remains.
-- **Low:** a selection can be made, but it depends on unproven conditions, uncertain race shape, or several unresolved factors.
+- **Medium:** one runner ranks first, but the advantage is narrow or one meaningful race-specific uncertainty remains.
+- **Low:** a selection can be made, but it depends on unproven conditions or several unresolved race-specific factors.
 
 **Confidence reflects the quality and completeness of the evidence, never the price.**
+
+**Definitional correction, 1 August 2026 (emergency correction exception — a
+factual/process clarification, not a predictive rule change).** Pace, race
+shape and draw (Stage 3.3) are frequently not independently assessable at
+time of commitment under this project's sourcing constraints: genuine
+running-style characterisation typically requires either proprietary
+commentary this project does not reproduce (see Source and copyright
+rules), or in-running video review not available at commitment. Treating
+that structural gap as "one meaningful uncertainty" would cap every entry
+at medium or below regardless of the actual race, making the confidence
+field uninformative. **Pace, race shape and draw are therefore recorded as
+a known structural gap and do not, by themselves, reduce confidence.**
+Confidence continues to be capped by race-specific uncertainty only: an
+unproven trip/surface/going selection (Stage 2), an unexposed field
+(Stage 1), or an unresolved factor specific to this particular race.
 
 **Paddock.** Where no parade feed is available at commitment, record "not assessable at time of commitment". A late drift is market information only. Do not claim it reflects paddock concerns without independent evidence.
 

@@ -3,6 +3,7 @@
 **Effective 31 July 2026. Supersedes the 22 July 2026 framework.**
 **Status: LOCKED. Scheduled review after the first 100 recorded selections.**
 **Regulatory references checked against GBGB Rules of Racing effective 5 June 2026.**
+**Definitional correction reviewed 1 August 2026: does not apply here — see note under Confidence definitions.**
 
 ---
 
@@ -171,6 +172,22 @@ If the leading two are essentially inseparable, record **no clear selection**.
 - **Low:** a selection can be made, but it depends on unproven conditions, an uncertain first bend projection, or several unresolved factors.
 
 **Confidence reflects the quality and completeness of the evidence, never the price.**
+
+**Definitional correction reviewed, 1 August 2026.** The horse framework
+received an emergency correction on this date removing pace/race shape/draw
+from counting against confidence, because that evidence is structurally
+unavailable at commitment for every horse entry regardless of the race,
+which made the confidence field uninformative. **That correction does not
+carry over to first bend projection here.** Trap draw, running style and
+first bend projection (Stage 3.1) are built from facts of record
+established at Stage 0 (today's trap grid) plus each runner's own recorded
+trap history and split times — genuinely assessable, not dependent on
+reproducing third-party commentary, and the strength of that evidence
+varies race to race (an unexposed runner or one with no comparable trap
+history gives a materially weaker projection than a well-raced runner with
+a clear pattern). An uncertain first bend projection is therefore
+race-specific uncertainty and continues to count under the Low definition
+above.
 
 ---
 
