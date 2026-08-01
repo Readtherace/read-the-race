@@ -72,22 +72,37 @@ function renderMarkdown(md) {
 
     if (/^[-*]\s/.test(line)) {
       const items = [];
-      while (i < lines.length && /^[-*]\s/.test(lines[i])) {
-        items.push(`<li>${mdInline(lines[i].replace(/^[-*]\s/, ""))}</li>`);
+      while (
+        i < lines.length &&
+        (/^[-*]\s/.test(lines[i]) || (items.length > 0 && /^\s+\S/.test(lines[i])))
+      ) {
+        if (/^[-*]\s/.test(lines[i])) {
+          items.push(lines[i].replace(/^[-*]\s/, "").trim());
+        } else {
+          // Indented continuation of the previous item's wrapped text.
+          items[items.length - 1] += " " + lines[i].trim();
+        }
         i++;
       }
-      html.push(`<ul>${items.join("")}</ul>`);
+      html.push(`<ul>${items.map((t) => `<li>${mdInline(t)}</li>`).join("")}</ul>`);
       inHeaderBlock = false;
       continue;
     }
 
     if (/^\d+\.\s/.test(line)) {
       const items = [];
-      while (i < lines.length && /^\d+\.\s/.test(lines[i])) {
-        items.push(`<li>${mdInline(lines[i].replace(/^\d+\.\s/, ""))}</li>`);
+      while (
+        i < lines.length &&
+        (/^\d+\.\s/.test(lines[i]) || (items.length > 0 && /^\s+\S/.test(lines[i])))
+      ) {
+        if (/^\d+\.\s/.test(lines[i])) {
+          items.push(lines[i].replace(/^\d+\.\s/, "").trim());
+        } else {
+          items[items.length - 1] += " " + lines[i].trim();
+        }
         i++;
       }
-      html.push(`<ol>${items.join("")}</ol>`);
+      html.push(`<ol>${items.map((t) => `<li>${mdInline(t)}</li>`).join("")}</ol>`);
       inHeaderBlock = false;
       continue;
     }

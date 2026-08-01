@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Entry — Read The Race</title>
+<meta name="description" content="A single horse racing entry, recorded under Read The Race horse framework v2.0.">
+<link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <a class="site-title" href="../index.html">Read <span>The</span> Race</a>
+    <p class="site-tagline">Horses — entry</p>
+    <nav class="site-nav">
+      <a href="../index.html">Home</a>
+      <a href="index.html" class="active">Horses</a>
+      <a href="../greyhounds/index.html">Greyhounds</a>
+    </nav>
+  </div>
+</header>
+
+<main class="container">
+
+  <div class="notice">
+    <strong>18+. Educational racing analysis only.</strong> Gambling involves
+    financial risk. This site does not accept stakes or provide bookmaker
+    services. Analysis is AI-assisted.
+  </div>
+
+  <p><a href="index.html">← Back to running record</a></p>
+
+  <div id="entry-root">
+    <div class="empty-state">Loading entry…</div>
+  </div>
+
+</main>
+
+<footer class="site-footer">
+  <p><strong>18+. Educational racing analysis only.</strong> Gambling
+  involves financial risk. This site does not accept stakes or provide
+  bookmaker services. Analysis is AI-assisted.</p>
+</footer>
+
+<script src="../assets/js/csv.js"></script>
+<script src="../assets/js/markdown.js"></script>
+<script src="../assets/js/site.js"></script>
+<script>
+  (() => {
+    const params = new URLSearchParams(window.location.search);
+    const file = params.get("file");
+    const root = document.getElementById("entry-root");
+    if (!file) {
+      root.innerHTML = '<div class="empty-state">No entry specified.</div>';
+      return;
+    }
+    loadEntryInto(root, `entries/${file}`, "course");
+  })();
+</script>
+
+</body>
+</html>

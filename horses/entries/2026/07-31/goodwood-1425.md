@@ -66,7 +66,13 @@ handicap and weight is not a differentiator today.
   pressing Group 3 favouritism.
 - **Uncertain at commitment:** pace/race-shape projection, course-and-
   distance draw bias, paddock (not assessable at time of commitment).
-- **Price:** 1.36 | **Implied probability:** 73.5% | **4/1–6/1 band:** No
+
+## Price
+
+- **Decimal price:** 1.36
+- **Implied probability:** 73.5%
+- **4/1–6/1 band:** No — well outside it, but the most likely winner is
+  never withheld for that.
+- **Each way (6.00+):** No — 1.36 is far below the threshold.
 - **Qualifies for action:** No — price below 2.00. Selection still recorded
-  in full.
-- **Each way:** n/a — price well below the 6.00 threshold.
+  in full, per the price policy.
