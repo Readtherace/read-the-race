@@ -29,6 +29,13 @@ retraction in `RETRACTIONS.md` at the repo root with the date and reason,
 and mark the original entry file (kept, not deleted) with a retraction
 notice — see that file for the format and the one existing example.
 
+**Correcting a documentation issue in an already-committed entry** (the
+write-up said something wrong or inconsistent, but the entry otherwise
+stands) is different again, and never involves editing the entry file —
+see the Commit rule. Log it in `CORRECTIONS.md` at the repo root instead:
+what the entry said, why it's wrong, and what the correct position is.
+The entry stays in the record exactly as committed.
+
 **This file is a fast operational index, not the framework.** It inlines
 only the rules that must never be skipped regardless of how much context is
 loaded: eliminators, confidence rules, price rules, language rules,
@@ -134,13 +141,30 @@ Keep entry bodies short — this is for daily use, not an essay. The
 frontmatter already carries the formal Permanent record fields; the body's
 job is to show the framework was actually applied, not restate it.
 
-- **Eliminated runners:** one line each — stage and reason, nothing more.
-  `**Runner** — eliminated, Stage 2.<n>: reason in one clause.`
+- **Every runner named gets an explicit Stage 2 verdict** — no exceptions,
+  no silent omissions. Eliminated: one line, stage and reason, nothing
+  more (`**Runner** — eliminated, Stage 2.<n>: reason in one clause.`).
+  Not eliminated: carried forward into the survivor write-up below (or,
+  for an unraced/unexposed runner with nothing to assess, a one-line
+  "unproven, not eliminated" note is enough). **If literally no runner is
+  eliminated, say so explicitly** — a line such as "No eliminations —
+  all N survive Stage 2" — rather than leaving Stage 2 silently implied
+  by jumping straight to the survivor list. Before committing, check every
+  name in the field appears in exactly one of: an eliminated line, a
+  survivor write-up, or an explicit non-runner/unraced note.
 - **Survivors:** three to four lines each — current ability/form, the
   suitability question (if any), the ranking factor that placed it. No
   sub-headers per runner, no stage-by-stage narration.
 - **Verdict:** selection, confidence, strongest reason, principal risk,
-  uncertain evidence.
+  uncertain evidence. **Confidence justification must never cite pace,
+  race shape or draw as a reason for capping below High** (horses only —
+  see the 1 August 2026 definitional correction above). If pace/race
+  shape/draw comes up at all, it belongs only in the "Uncertain at
+  commitment" line, stated as a structural gap that does not affect
+  confidence — never as part of the reason confidence is Medium or Low.
+  Before committing, re-read the Confidence line and confirm it isn't
+  smuggling pace/draw back in as a justification. (See `CORRECTIONS.md`
+  for the one entry that missed this.)
 - **Price:** decimal price, implied probability, whether inside the
   4/1–6/1 band, whether at/above 6.00 for each way, whether it qualifies
   for action. **Mandatory, every entry, no exceptions** — see Price rules.
@@ -173,6 +197,11 @@ operator_disagreement: ""
 
 ## Field
 
+<!-- Every runner must appear exactly once below: eliminated, carried
+     forward as a survivor, or an explicit unraced/non-runner note. If
+     nothing is eliminated, replace the first bullet with a single line:
+     "No eliminations — all N survive Stage 2." -->
+
 - **Runner** — eliminated, Stage 2.<n>: reason in one clause.
 - **Runner** — three to four lines: current ability/form, suitability, the
   ranking factor that placed it here, anything held against it.
@@ -181,6 +210,9 @@ operator_disagreement: ""
 
 - **Selection:**
 - **Confidence:** high / medium / low
+  <!-- Justify with race-specific factors only. Never cite pace, race
+       shape or draw here — that's a structural gap (see Confidence
+       rules), not a reason to cap below High. -->
 - **Strongest reason:**
 - **Principal risk:**
 - **Uncertain at commitment:**
@@ -227,6 +259,11 @@ vacancy_testing_record: ""
 
 ## Field
 
+<!-- Every runner must appear exactly once below: eliminated, carried
+     forward as a survivor, or an explicit unraced/non-runner note. If
+     nothing is eliminated, replace the first bullet with a single line:
+     "No eliminations — all N survive Stage 2." -->
+
 - **Runner (Tn)** — eliminated, Stage 2.<n>: reason in one clause.
 - **Runner (Tn)** — three to four lines: first-bend projection/early pace,
   calculated time, the ranking factor that placed it here, anything held
@@ -236,6 +273,10 @@ vacancy_testing_record: ""
 
 - **Selection:**
 - **Confidence:** high / medium / low
+  <!-- Unlike horses, an uncertain first bend projection IS legitimate
+       race-specific uncertainty here and can justify capping below High
+       — see Confidence rules. The horse-only "never cite pace/draw"
+       restriction does not apply to greyhounds. -->
 - **Strongest reason:**
 - **Principal risk:**
 - **Uncertain at commitment:**
