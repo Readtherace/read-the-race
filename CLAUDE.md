@@ -94,12 +94,22 @@ read-the-race/
 7. Every entry needs a **complete Price section** (see Price rules below).
    An entry missing it is incomplete and must not be committed.
 8. **Once the result is known**, fill in `result` (and `starting_price` if
-   available) in all three places: the entry file's frontmatter, the CSV
-   row, and the manifest.json entry. This is completing a field that was
-   deliberately left blank at commitment, not editing the record — the
-   append-only/no-edit rule protects the pre-race reasoning (selection,
-   confidence, price at commitment, principal risk), not these two fields.
-   Never touch anything else in an existing row or entry file.
+   available) in the CSV row and the manifest.json entry only. **Never
+   edit the entry file itself** — it stays exactly as committed pre-race,
+   the frozen audit record. results.csv and manifest.json are the living
+   overlay that carries what happened afterward: result, starting_price,
+   material_change (see below), and nothing else. This is completing
+   fields deliberately left blank/default at commitment, not editing the
+   pre-race reasoning (selection, confidence, price at commitment,
+   principal risk) — that part of the row is genuinely immutable.
+9. **If a material change is discovered after commitment** but a full
+   reopening isn't practical (missing details, or the change only
+   surfaces well after the fact), record what's known in the CSV row's
+   `material_change` field — same rule as point 8: CSV only, entry file
+   untouched. Note explicitly what evidence supports the finding and what
+   would still be needed to reopen properly. A genuine reopening (new
+   entry, new CSV row) remains the default when there's enough
+   information to redo the analysis under the changed conditions.
 
 ### CSV columns
 

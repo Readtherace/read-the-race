@@ -31,7 +31,7 @@ function classifyResult(result) {
   if (!r) return "pending";
   if (r.includes("no qualifying")) return "no-action";
   if (r.includes("void") || r.includes("non-runner") || r.includes("nonrunner") || r.includes("non runner")) return "void";
-  if (r === "win" || r.startsWith("win")) return "win";
+  if (/^(win|won)\b/.test(r)) return "win";
   return "lose";
 }
 
