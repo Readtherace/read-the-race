@@ -4,6 +4,7 @@
 **Status: LOCKED. Scheduled review after the first 100 recorded selections.**
 **Regulatory references checked against GBGB Rules of Racing effective 5 June 2026.**
 **Definitional correction reviewed 1 August 2026: does not apply here — see note under Confidence definitions.**
+**Definitional correction 2 August 2026 (emergency correction exception): Permanent record — process compliance is now checklist-based, see note under Permanent record.**
 
 ---
 
@@ -281,13 +282,34 @@ Every entry retains:
 
 Field 13 is recorded but never acted on within the entry. It is reviewed only at the scheduled review point.
 
-**Process compliance grade, assessed blind to the result:**
+**Definitional correction, 2 August 2026 (emergency correction exception —
+a factual/process clarification, not a predictive rule change).** Process
+compliance was originally defined as a letter grade (A/B/C) assessed
+"blind to the result," which assumes an assessor independent of whoever
+produced the entry. In practice, the analysis and any compliance
+assessment are not produced by separate parties in this operation, so a
+grade generated as part of the entry — by the same party grading its own
+work at the moment it produces it — is not a reliable review.
 
-- **A:** every required stage completed, evidence recorded, confidence rules followed, no framework rule breached
-- **B:** the selection followed the framework, but a minor item was missing or insufficiently documented
-- **C:** a material stage was skipped, evidence applied inconsistently, or a framework rule breached
+**Process compliance is now assessed against a stated checklist, not a
+self-assigned grade, and the assessment is not generated as part of the
+entry:**
 
-**The grade must not depend on whether the greyhound won.** Judge the process separately from the result.
+1. Every runner in the field accounted for — eliminated, carried forward,
+   or explicitly noted as a non-runner
+2. Every elimination tied to a named stage and reason
+3. A complete price block: decimal price, implied probability, publishing
+   band position, each way status, whether it qualifies for action
+4. Confidence matches its stated definition — the justification given is
+   actually consistent with High, Medium or Low as defined, and does not
+   cite anything the framework excludes from confidence (Stage 4)
+5. Language rules and Source and copyright rules observed
+
+Any item the checklist finds missing or inconsistent is recorded
+specifically, not folded into a single grade. **The grade itself, where
+one is wanted, is assigned by the operator, not generated as part of the
+entry.** Assessment happens after commitment and must not depend on
+whether the greyhound won — the checklist is procedural, not outcome-based.
 
 ---
 

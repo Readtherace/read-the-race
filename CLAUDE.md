@@ -105,10 +105,11 @@ read-the-race/
    edit the entry file itself** — it stays exactly as committed pre-race,
    the frozen audit record. results.csv and manifest.json are the living
    overlay that carries what happened afterward: result, starting_price,
-   material_change (see below), and nothing else. This is completing
-   fields deliberately left blank/default at commitment, not editing the
-   pre-race reasoning (selection, confidence, price at commitment,
-   principal risk) — that part of the row is genuinely immutable.
+   material_change, process_compliance_grade (see below), and nothing
+   else. This is completing fields deliberately left blank/default at
+   commitment, not editing the pre-race reasoning (selection, confidence,
+   price at commitment, principal risk) — that part of the row is
+   genuinely immutable.
 9. **If a material change is discovered after commitment** but a full
    reopening isn't practical (missing details, or the change only
    surfaces well after the fact), record what's known in the CSV row's
@@ -117,6 +118,17 @@ read-the-race/
    would still be needed to reopen properly. A genuine reopening (new
    entry, new CSV row) remains the default when there's enough
    information to redo the analysis under the changed conditions.
+10. **Leave `process_compliance_grade` blank at commitment — never
+    self-assign it while writing the entry.** Per the framework's 2 August
+    2026 definitional correction, compliance is checked against a stated
+    checklist (all runners accounted for, eliminations tied to a named
+    stage, complete price block, confidence matching its definition,
+    language/copyright rules observed) and any grade is assigned by the
+    operator afterward, not generated as part of the entry — the same
+    party can't reliably grade its own work at the moment it produces it.
+    If asked to audit an entry against the checklist, report what's
+    present and missing item by item; do not assign a letter grade unless
+    explicitly asked to.
 
 ### CSV columns
 
