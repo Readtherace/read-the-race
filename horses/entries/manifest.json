@@ -47,5 +47,103 @@
     "time": "17:20",
     "file": "2026/08-01/goodwood-1720.md",
     "result": "Won"
+  },
+  {
+    "date": "2026-08-02",
+    "venue": "Galway",
+    "time": "13:50",
+    "file": "2026/08-02/galway-1350.md",
+    "result": ""
+  },
+  {
+    "date": "2026-08-02",
+    "venue": "Galway",
+    "time": "14:20",
+    "file": "2026/08-02/galway-1420.md",
+    "result": ""
+  },
+  {
+    "date": "2026-08-02",
+    "venue": "Galway",
+    "time": "14:55",
+    "file": "2026/08-02/galway-1455.md",
+    "result": ""
+  },
+  {
+    "date": "2026-08-02",
+    "venue": "Galway",
+    "time": "15:30",
+    "file": "2026/08-02/galway-1530.md",
+    "result": ""
+  },
+  {
+    "date": "2026-08-02",
+    "venue": "Galway",
+    "time": "16:00",
+    "file": "2026/08-02/galway-1600.md",
+    "result": ""
+  },
+  {
+    "date": "2026-08-02",
+    "venue": "Galway",
+    "time": "16:30",
+    "file": "2026/08-02/galway-1630.md",
+    "result": ""
+  },
+  {
+    "date": "2026-08-02",
+    "venue": "Galway",
+    "time": "17:00",
+    "file": "2026/08-02/galway-1700.md",
+    "result": ""
+  },
+  {
+    "date": "2026-08-02",
+    "venue": "Galway",
+    "time": "17:30",
+    "file": "2026/08-02/galway-1730.md",
+    "result": ""
+  },
+  {
+    "date": "2026-08-02",
+    "venue": "Chester",
+    "time": "14:10",
+    "file": "2026/08-02/chester-1410.md",
+    "result": ""
+  },
+  {
+    "date": "2026-08-02",
+    "venue": "Chester",
+    "time": "14:45",
+    "file": "2026/08-02/chester-1445.md",
+    "result": ""
+  },
+  {
+    "date": "2026-08-02",
+    "venue": "Chester",
+    "time": "15:20",
+    "file": "2026/08-02/chester-1520.md",
+    "result": ""
+  },
+  {
+    "date": "2026-08-02",
+    "venue": "Chester",
+    "time": "15:52",
+    "file": "2026/08-02/chester-1552.md",
+    "result": ""
+  },
+  {
+    "date": "2026-08-02",
+    "venue": "Chester",
+    "time": "16:22",
+    "file": "2026/08-02/chester-1622.md",
+    "result": ""
+  },
+  {
+    "date": "2026-08-02",
+    "venue": "Chester",
+    "time": "16:52",
+    "file": "2026/08-02/chester-1652.md",
+    "result": ""
   }
 ]
