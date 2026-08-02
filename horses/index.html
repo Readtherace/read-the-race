@@ -39,7 +39,22 @@
   </p>
 
   <h2>Running record</h2>
-  <div id="running-record"></div>
+  <div id="stats"></div>
+
+  <div id="form-strip"></div>
+
+  <div class="table-heading">
+    <h3>Today</h3>
+  </div>
+  <div id="today-table"></div>
+
+  <div class="table-heading">
+    <h3>Resulted</h3>
+  </div>
+  <div id="resulted-table"></div>
+
+  <div id="price-chart"></div>
+  <div id="confidence-chart"></div>
 
   <h2>Entries by date</h2>
   <div id="date-browser"></div>
@@ -60,7 +75,12 @@
 <script>
   (async () => {
     const rows = await loadCSVRows("results.csv");
-    renderRunningRecord(document.getElementById("running-record"), rows, "course");
+    renderStats(document.getElementById("stats"), rows);
+    renderFormStrip(document.getElementById("form-strip"), rows);
+    renderTodayTable(document.getElementById("today-table"), rows, "course");
+    renderResultedTable(document.getElementById("resulted-table"), rows, "course");
+    renderPriceBandChart(document.getElementById("price-chart"), rows);
+    renderConfidenceChart(document.getElementById("confidence-chart"), rows);
 
     const entries = await loadJSON("entries/manifest.json");
     renderDateBrowser(document.getElementById("date-browser"), entries, "entry.html");

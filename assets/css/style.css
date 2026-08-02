@@ -1,19 +1,20 @@
-/* Read The Race — shared stylesheet. Dark background, mobile-first. */
+/* Read The Race — shared stylesheet. Light racecourse theme, mobile-first. */
 
 :root {
-  --bg: #0b0d10;
-  --bg-raised: #14171b;
-  --bg-card: #181c21;
-  --border: #262b31;
-  --row-divider: #383f47;
-  --text: #e7e9ec;
-  --text-dim: #9aa2ad;
-  --text-faint: #6b7280;
-  --accent: #c9a24a;
-  --accent-dim: #8a7134;
-  --win: #4caf7d;
-  --lose: #c9605a;
-  --void: #6b7280;
+  --bg: #f6f1e4;
+  --bg-raised: #efe6d2;
+  --bg-card: #fffcf5;
+  --border: #d8cca9;
+  --row-divider: #c4b58a;
+  --text: #2a2318;
+  --text-dim: #5c5033;
+  --text-faint: #6b5d3f;
+  --accent: #1f4d38;
+  --accent-dim: #163728;
+  --win: #1f6b3d;
+  --lose: #8c3a2b;
+  --void: #8a7c58;
+  --chart-track: #e6d9b8;
   --max-width: 720px;
   --radius: 10px;
 }
@@ -91,7 +92,7 @@ body {
 
 .site-nav a:hover,
 .site-nav a.active {
-  color: var(--text);
+  color: var(--accent);
   border-bottom-color: var(--accent);
 }
 
@@ -263,7 +264,7 @@ hr {
 table {
   border-collapse: collapse;
   width: 100%;
-  min-width: 700px;
+  min-width: 620px;
   font-size: 0.88rem;
 }
 
@@ -291,6 +292,28 @@ th {
 
 tr:last-child td {
   border-bottom: none;
+}
+
+/* Group header rows inside the Today/Resulted tables — date and course
+   separators, replacing per-row date/course columns. */
+tr.group-header-date td {
+  background: var(--accent);
+  color: var(--bg-card);
+  font-weight: 700;
+  font-size: 0.85rem;
+  padding: 10px 14px;
+  border-bottom: none;
+}
+
+tr.group-header-course td {
+  background: var(--bg-raised);
+  color: var(--text-dim);
+  font-weight: 700;
+  font-size: 0.76rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  padding: 8px 14px;
+  border-bottom: 1px solid var(--row-divider);
 }
 
 /* Numeric columns: right-aligned, tabular monospace figures so digits line up. */
@@ -324,6 +347,160 @@ tr:last-child td {
   border: 1px dashed var(--border);
   border-radius: var(--radius);
   text-align: center;
+}
+
+.table-heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.table-heading .table-subtitle {
+  font-size: 0.82rem;
+  color: var(--text-faint);
+}
+
+/* Form strip */
+
+.form-strip {
+  margin-bottom: 28px;
+}
+
+.form-strip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 4px 0 8px;
+}
+
+.form-square {
+  width: 16px;
+  height: 16px;
+  border-radius: 3px;
+  flex: 0 0 auto;
+  border: 2px solid var(--border);
+  background: transparent;
+}
+
+.form-square.form-win {
+  background: var(--win);
+  border-color: var(--win);
+}
+
+.form-square.form-lose {
+  background: transparent;
+  border-color: var(--lose);
+}
+
+.form-square.form-no-action {
+  background: var(--void);
+  border-color: var(--void);
+  opacity: 0.35;
+}
+
+.form-square.form-pending {
+  background: transparent;
+  border-color: var(--border);
+  border-style: dashed;
+}
+
+.form-strip-caption {
+  font-size: 0.78rem;
+  color: var(--text-faint);
+  margin: 0;
+}
+
+.form-strip-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  font-size: 0.76rem;
+  color: var(--text-faint);
+  margin: 6px 0 0;
+}
+
+.form-strip-legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.form-strip-legend .form-square {
+  width: 11px;
+  height: 11px;
+  border-width: 1.5px;
+}
+
+/* Bar charts */
+
+.bar-chart {
+  margin-bottom: 8px;
+}
+
+.bar-chart-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text);
+  margin: 0 0 2px;
+}
+
+.bar-chart-subtitle {
+  font-size: 0.78rem;
+  color: var(--text-faint);
+  margin: 0 0 14px;
+}
+
+.bar-row {
+  display: grid;
+  grid-template-columns: 92px 1fr;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.bar-row-label {
+  font-size: 0.82rem;
+  color: var(--text-dim);
+  text-align: right;
+}
+
+.bar-row-track-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.bar-track {
+  flex: 1 1 auto;
+  height: 22px;
+  background: var(--chart-track);
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 5px;
+  min-width: 3px;
+}
+
+.bar-row-value {
+  flex: 0 0 auto;
+  font-size: 0.82rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
+  white-space: nowrap;
+  min-width: 88px;
+}
+
+.bar-row-note {
+  display: block;
+  font-size: 0.72rem;
+  color: var(--text-faint);
+  font-weight: 400;
 }
 
 /* Date browser */

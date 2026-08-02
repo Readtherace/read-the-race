@@ -60,15 +60,93 @@ function raceTimeFromEntryId(entryId) {
   return m ? `${m[1]}:${m[2]}` : "";
 }
 
-/* Renders the stat-tile summary + full table for one sport's results.csv rows. */
-function renderRunningRecord(el, rows, venueKey) {
+/* Formats an ISO date (YYYY-MM-DD) as UK DD/MM/YYYY. Passes through anything
+ * that isn't a plain ISO date rather than mangling it. */
+function formatDateUK(iso) {
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso || "");
+  if (!m) return iso || "";
+  return `${m[3]}/${m[2]}/${m[1]}`;
+}
+
+/* Today's date as YYYY-MM-DD in the visitor's local time, to match against
+ * the ISO dates stored in results.csv / manifest.json. */
+function todayIso() {
+  const d = new Date();
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
+}
+
+/*
+ * Groups rows by venue (course/track), sorts each group's races by time,
+ * and orders the groups by their own earliest race time. Used inside a
+ * single date — see groupByDateThenVenue for the Resulted table, which is
+ * this same grouping applied once per date.
+ */
+function groupByVenueSorted(rows, venueKey) {
+  const groups = {};
+  rows.forEach((r) => {
+    const venue = r[venueKey] || "Unknown";
+    if (!groups[venue]) groups[venue] = [];
+    groups[venue].push(r);
+  });
+  const list = Object.keys(groups).map((venue) => {
+    const sorted = groups[venue].slice().sort((a, b) =>
+      raceTimeFromEntryId(a.entry_id).localeCompare(raceTimeFromEntryId(b.entry_id))
+    );
+    return { venue, rows: sorted, firstTime: raceTimeFromEntryId(sorted[0].entry_id) };
+  });
+  list.sort((a, b) => a.firstTime.localeCompare(b.firstTime));
+  return list;
+}
+
+/* Groups rows by date (most recent first), then by venue within each date. */
+function groupByDateThenVenue(rows, venueKey) {
+  const dateGroups = {};
+  rows.forEach((r) => {
+    const d = r.date || "";
+    if (!dateGroups[d]) dateGroups[d] = [];
+    dateGroups[d].push(r);
+  });
+  const dates = Object.keys(dateGroups).sort((a, b) => b.localeCompare(a));
+  return dates.map((date) => ({ date, venues: groupByVenueSorted(dateGroups[date], venueKey) }));
+}
+
+/* One race row: time, selection, price, each way, result, confidence.
+ * Date and venue are conveyed by the group header above, not repeated here. */
+function raceRowHtml(r) {
+  const raceTime = raceTimeFromEntryId(r.entry_id);
+  const pb = computePriceBlock(r.price_at_commitment);
+  const qualifies = qualifiesForAction(r);
+  const eachWay = pb.price !== null ? (pb.eachWayEligible ? "Yes" : "No") : "—";
+  const selectionHtml = qualifies
+    ? mdEscape(r.selection || "")
+    : `<span class="no-action-label">No qualifying action</span><span class="no-action-runner">${mdEscape(r.selection || "")}</span>`;
+
+  return `<tr>
+    <td class="price-cell">${mdEscape(raceTime)}</td>
+    <td class="selection-cell">${selectionHtml}</td>
+    <td class="price-cell">${pb.price !== null ? pb.price.toFixed(2) : "—"}</td>
+    <td>${eachWay}</td>
+    <td class="${resultClass(r.result)}">${mdEscape(r.result || "pending")}</td>
+    <td>${mdEscape(r.confidence || "")}</td>
+  </tr>`;
+}
+
+const RACE_TABLE_HEAD = `<thead><tr>
+  <th>Race Time</th><th>Selection</th><th>Price</th><th>Each Way</th><th>Result</th><th>Confidence</th>
+</tr></thead>`;
+
+/* Renders the stat-tile summary for one sport's results.csv rows. */
+function renderStats(el, rows) {
   if (!rows.length) {
     el.innerHTML = '<div class="empty-state">No entries recorded yet. Check back after the next meeting.</div>';
     return;
   }
 
   let wins = 0;
-  let decided = 0; // qualifying entries with a settled win/lose result — strike-rate denominator
+  let decided = 0;
   let qualifying = 0;
   let noAction = 0;
 
@@ -78,7 +156,6 @@ function renderRunningRecord(el, rows, venueKey) {
       const k = classifyResult(r.result);
       if (k === "win") { wins++; decided++; }
       else if (k === "lose") { decided++; }
-      // void and pending (result not yet known) don't count toward strike rate
     } else {
       noAction++;
     }
@@ -89,56 +166,77 @@ function renderRunningRecord(el, rows, venueKey) {
     ? `${wins}/${decided}${pct !== null ? ` (${pct}%)` : ""}`
     : "0/0";
 
-  const sorted = rows.slice().sort((a, b) => {
-    const da = `${a.date || ""} ${raceTimeFromEntryId(a.entry_id)}`;
-    const db = `${b.date || ""} ${raceTimeFromEntryId(b.entry_id)}`;
-    return db.localeCompare(da);
-  });
-
-  const statHtml = `
+  el.innerHTML = `
     <div class="stat-row">
       <div class="stat-tile"><div class="value">${rows.length}</div><div class="label">Entries</div></div>
       <div class="stat-tile"><div class="value">${qualifying}</div><div class="label">Qualifying</div></div>
       <div class="stat-tile"><div class="value">${strikeRateText}</div><div class="label">Strike rate</div></div>
       <div class="stat-tile"><div class="value">${noAction}</div><div class="label">No action</div></div>
     </div>`;
+}
 
-  const rowsHtml = sorted.map((r) => {
-    const venue = r[venueKey] || "";
-    const raceTime = raceTimeFromEntryId(r.entry_id);
-    const pb = computePriceBlock(r.price_at_commitment);
-    const qualifies = qualifiesForAction(r);
-    const eachWay = pb.price !== null ? (pb.eachWayEligible ? "Yes" : "No") : "—";
-    const selectionHtml = qualifies
-      ? mdEscape(r.selection || "")
-      : `<span class="no-action-label">No qualifying action</span><span class="no-action-runner">${mdEscape(r.selection || "")}</span>`;
+/*
+ * "Today" table: races dated today that don't have a result yet. Grouped
+ * by venue, each venue block sorted earliest race first, venues ordered by
+ * their own earliest race. A race leaves this table the moment it settles
+ * — see renderResultedTable.
+ */
+function renderTodayTable(el, rows, venueKey) {
+  const today = todayIso();
+  const todayRows = rows.filter((r) => r.date === today && classifyResult(r.result) === "pending");
 
-    return `<tr>
-      <td>${mdEscape(r.date || "")}</td>
-      <td class="price-cell">${mdEscape(raceTime)}</td>
-      <td>${mdEscape(venue)}</td>
-      <td class="selection-cell">${selectionHtml}</td>
-      <td class="price-cell">${pb.price !== null ? pb.price.toFixed(2) : "—"}</td>
-      <td>${eachWay}</td>
-      <td class="${resultClass(r.result)}">${mdEscape(r.result || "pending")}</td>
-      <td>${mdEscape(r.confidence || "")}</td>
-    </tr>`;
-  }).join("");
+  if (!todayRows.length) {
+    el.innerHTML = '<div class="empty-state">No races entered for today yet.</div>';
+    return;
+  }
 
-  const tableHtml = `
+  const venues = groupByVenueSorted(todayRows, venueKey);
+  const body = venues.map((v) =>
+    `<tr class="group-header-course"><td colspan="6">${mdEscape(v.venue)}</td></tr>` +
+    v.rows.map(raceRowHtml).join("")
+  ).join("");
+
+  el.innerHTML = `
     <div class="table-scroll">
       <table>
-        <thead>
-          <tr>
-            <th>Date</th><th>Race Time</th><th>${venueKey === "track" ? "Track" : "Course"}</th>
-            <th>Selection</th><th>Price</th><th>Each Way</th><th>Result</th><th>Confidence</th>
-          </tr>
-        </thead>
-        <tbody>${rowsHtml}</tbody>
+        ${RACE_TABLE_HEAD}
+        <tbody>${body}</tbody>
       </table>
     </div>`;
+}
 
-  el.innerHTML = statHtml + tableHtml;
+/*
+ * "Resulted" table: everything not shown in Today — i.e. any race with a
+ * settled result, plus any pending race left over from a previous day.
+ * Grouped by date (most recent first), then by venue within each date,
+ * same earliest-first sort as Today.
+ */
+function renderResultedTable(el, rows, venueKey) {
+  const today = todayIso();
+  const resultedRows = rows.filter((r) => !(r.date === today && classifyResult(r.result) === "pending"));
+
+  if (!resultedRows.length) {
+    el.innerHTML = '<div class="empty-state">No results recorded yet.</div>';
+    return;
+  }
+
+  const dateGroups = groupByDateThenVenue(resultedRows, venueKey);
+  const body = dateGroups.map((dg) => {
+    const dateHeader = `<tr class="group-header-date"><td colspan="6">${formatDateUK(dg.date)}</td></tr>`;
+    const venueRows = dg.venues.map((v) =>
+      `<tr class="group-header-course"><td colspan="6">${mdEscape(v.venue)}</td></tr>` +
+      v.rows.map(raceRowHtml).join("")
+    ).join("");
+    return dateHeader + venueRows;
+  }).join("");
+
+  el.innerHTML = `
+    <div class="table-scroll">
+      <table>
+        ${RACE_TABLE_HEAD}
+        <tbody>${body}</tbody>
+      </table>
+    </div>`;
 }
 
 /* Renders a compact strike-rate-only summary card, used on the site home page. */
@@ -165,6 +263,140 @@ function renderRunningRecordSummary(el, rows) {
     </div>`;
 }
 
+/*
+ * Form strip: the last 20 selections (oldest to most recent, left to
+ * right — the same reading order as a horse's own form figures), as small
+ * squares. Filled = won, outlined = lost, faded = didn't qualify for
+ * action (void results are folded into "faded" too, since neither counts
+ * as a genuine win or loss).
+ */
+function renderFormStrip(el, rows) {
+  const sorted = rows.slice().sort((a, b) => {
+    const da = `${a.date || ""} ${raceTimeFromEntryId(a.entry_id)}`;
+    const db = `${b.date || ""} ${raceTimeFromEntryId(b.entry_id)}`;
+    return da.localeCompare(db);
+  });
+  const last20 = sorted.slice(-20);
+
+  if (!last20.length) {
+    el.innerHTML = '<div class="form-strip empty-state">No selections recorded yet.</div>';
+    return;
+  }
+
+  const squares = last20.map((r) => {
+    const qualifies = qualifiesForAction(r);
+    const k = classifyResult(r.result);
+    let cls = "form-pending";
+    let label = "pending";
+    if (!qualifies) {
+      cls = "form-no-action";
+      label = "no qualifying action";
+    } else if (k === "win") {
+      cls = "form-win";
+      label = "won";
+    } else if (k === "lose") {
+      cls = "form-lose";
+      label = "lost";
+    } else if (k === "void") {
+      cls = "form-no-action";
+      label = "void";
+    }
+    const title = `${r.selection || "—"} — ${label} (${formatDateUK(r.date)})`;
+    return `<span class="form-square ${cls}" title="${mdEscape(title)}"></span>`;
+  }).join("");
+
+  const sampleNote = last20.length < 10
+    ? `Last ${last20.length} of ${rows.length} recorded, oldest to most recent — sample under 10, not yet meaningful.`
+    : `Last ${last20.length} of ${rows.length} recorded, oldest to most recent.`;
+
+  el.innerHTML = `
+    <div class="form-strip">
+      <div class="form-strip-row">${squares}</div>
+      <p class="form-strip-caption">${mdEscape(sampleNote)}</p>
+      <div class="form-strip-legend">
+        <span><span class="form-square form-win"></span>Won</span>
+        <span><span class="form-square form-lose"></span>Lost</span>
+        <span><span class="form-square form-no-action"></span>No qualifying action</span>
+      </div>
+    </div>`;
+}
+
+/* Shared renderer for the two bar charts — one row per band/level, bar
+ * length proportional to strike rate, numerator/denominator always shown
+ * as text (never a bare percentage), with a small-sample note per row. */
+function renderBarChart(el, title, subtitle, buckets) {
+  const rowsHtml = buckets.map((b) => {
+    const pct = b.decided > 0 ? Math.round((b.wins / b.decided) * 100) : 0;
+    const valueText = b.decided > 0 ? `${b.wins}/${b.decided} (${pct}%)` : "0/0";
+    const note = b.decided > 0 && b.decided < 10
+      ? '<span class="bar-row-note">Sample under 10 — not yet meaningful.</span>'
+      : "";
+    return `
+      <div class="bar-row">
+        <div class="bar-row-label">${mdEscape(b.label)}</div>
+        <div>
+          <div class="bar-row-track-wrap">
+            <div class="bar-track"><div class="bar-fill" style="width:${b.decided > 0 ? pct : 0}%"></div></div>
+            <div class="bar-row-value">${valueText}</div>
+          </div>
+          ${note}
+        </div>
+      </div>`;
+  }).join("");
+
+  el.innerHTML = `
+    <div class="bar-chart">
+      <p class="bar-chart-title">${mdEscape(title)}</p>
+      <p class="bar-chart-subtitle">${mdEscape(subtitle)}</p>
+      ${rowsHtml}
+    </div>`;
+}
+
+const CHART_SUBTITLE = "All recorded selections with a settled result, including any that didn't qualify for action under the price policy.";
+
+/* Strike rate by price band. Deliberately includes sub-2.00 selections
+ * (unlike the Qualifying stat elsewhere) — otherwise the "under 2.00" band
+ * would always read 0/0 and the chart would lose its own point. */
+function renderPriceBandChart(el, rows) {
+  const bands = [
+    { label: "Under 2.00", test: (p) => p < 2 },
+    { label: "2.00–3.00", test: (p) => p >= 2 && p < 3 },
+    { label: "3.00–4.00", test: (p) => p >= 3 && p < 4 },
+    { label: "4.00–6.00", test: (p) => p >= 4 && p < 6 },
+    { label: "6.00+", test: (p) => p >= 6 },
+  ];
+  const buckets = bands.map((band) => {
+    let wins = 0;
+    let decided = 0;
+    rows.forEach((r) => {
+      const price = parseFloat(r.price_at_commitment);
+      if (isNaN(price) || !band.test(price)) return;
+      const k = classifyResult(r.result);
+      if (k === "win") { wins++; decided++; }
+      else if (k === "lose") { decided++; }
+    });
+    return { label: band.label, wins, decided };
+  });
+  renderBarChart(el, "Strike rate by price band", CHART_SUBTITLE, buckets);
+}
+
+/* Strike rate by confidence level. */
+function renderConfidenceChart(el, rows) {
+  const levels = ["High", "Medium", "Low"];
+  const buckets = levels.map((level) => {
+    let wins = 0;
+    let decided = 0;
+    rows.forEach((r) => {
+      if ((r.confidence || "").trim().toLowerCase() !== level.toLowerCase()) return;
+      const k = classifyResult(r.result);
+      if (k === "win") { wins++; decided++; }
+      else if (k === "lose") { decided++; }
+    });
+    return { label: level, wins, decided };
+  });
+  renderBarChart(el, "Strike rate by confidence", CHART_SUBTITLE, buckets);
+}
+
 /* Groups manifest entries by year then date and renders a browsable list.
  * Links to the entry viewer page (entry.html?file=...), never straight at
  * the raw .md — the browser can't render markdown on its own. */
@@ -189,7 +421,7 @@ function renderDateBrowser(el, entries, viewerPath) {
       <li>
         <a href="${viewerPath}?file=${encodeURIComponent(e.file)}">
           <span class="entry-track">${mdEscape(e.venue || "")}</span>
-          <span class="entry-meta">${mdEscape(e.date || "")}${e.time ? " · " + mdEscape(e.time) : ""}${e.result ? " · " + mdEscape(e.result) : ""}</span>
+          <span class="entry-meta">${mdEscape(formatDateUK(e.date))}${e.time ? " · " + mdEscape(e.time) : ""}${e.result ? " · " + mdEscape(e.result) : ""}</span>
         </a>
       </li>`).join("");
     return `<div class="date-group"><h3>${year}</h3><ul class="entry-list">${items}</ul></div>`;
@@ -256,6 +488,7 @@ function renderEntry(el, frontmatter, body, venueKey) {
   const confidenceKey = confidence.toLowerCase();
   const venue = frontmatter[venueKey] || "";
   const pb = computePriceBlock(frontmatter.price_at_commitment);
+  const raceTime = raceTimeFromEntryId(frontmatter.entry_id);
 
   let qualifiesText;
   if (!selection) {
@@ -266,7 +499,7 @@ function renderEntry(el, frontmatter, body, venueKey) {
     qualifiesText = pb.qualifies ? "Yes" : "No — below 2.00";
   }
 
-  const metaBits = [venue, frontmatter.date, frontmatter.time_of_commitment].filter(Boolean);
+  const metaBits = [venue, formatDateUK(frontmatter.date), raceTime].filter(Boolean);
 
   const cardHtml = `
     <div class="card verdict-card">
