@@ -264,30 +264,53 @@ hr {
 table {
   border-collapse: collapse;
   width: 100%;
-  min-width: 620px;
-  font-size: 0.88rem;
+  table-layout: fixed;
+  font-size: 0.82rem;
 }
+
+/* Proportional column widths so desktop fits all 7 columns without
+   horizontal scroll — Selection is the only variable-length prose column
+   and gets the most room; the rest stay narrow. Only meaningful above the
+   640px breakpoint — below it the table becomes a stacked card layout and
+   these are ignored. */
+col.col-time { width: 9%; }
+col.col-selection { width: 23%; }
+col.col-price { width: 14%; }
+col.col-sp { width: 13%; }
+col.col-ew { width: 9%; }
+col.col-result { width: 14%; }
+col.col-conf { width: 18%; }
 
 th, td {
   text-align: left;
-  padding: 15px 14px;
+  padding: 12px 8px;
   border-bottom: 1px solid var(--row-divider);
+}
+
+td {
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 td.selection-cell {
   white-space: normal;
-  min-width: 160px;
+  overflow: visible;
+  text-overflow: clip;
 }
 
 th {
   color: var(--text-dim);
-  font-size: 0.76rem;
+  font-size: 0.72rem;
   text-transform: uppercase;
   letter-spacing: 0.03em;
   background: var(--bg-raised);
   position: sticky;
   top: 0;
+  white-space: normal;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  line-height: 1.25;
 }
 
 tr:last-child td {
@@ -316,11 +339,81 @@ tr.group-header-course td {
   border-bottom: 1px solid var(--row-divider);
 }
 
-/* Numeric columns: right-aligned, tabular monospace figures so digits line up. */
+/* Numeric columns: right-aligned, tabular monospace figures so decimal
+   points line up. Text columns (Selection, Each Way, Result, Confidence)
+   stay left-aligned via the base th/td rule above. */
 .price-cell {
   text-align: right;
   font-variant-numeric: tabular-nums;
   font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+/* Below 640px: replace the table with a stacked card per race, each field
+   labelled from its data-label attribute, rather than a horizontally
+   scrolling table. Group header rows (date/course separators) stay as
+   simple full-width banners. */
+@media (max-width: 639px) {
+  .table-scroll {
+    overflow-x: visible;
+    border: none;
+    border-radius: 0;
+  }
+
+  table {
+    table-layout: auto;
+  }
+
+  thead {
+    display: none;
+  }
+
+  table, tbody, tr {
+    display: block;
+    width: 100%;
+  }
+
+  tr:not(.group-header-date):not(.group-header-course) {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    margin-bottom: 12px;
+    padding: 2px 14px;
+  }
+
+  tr:not(.group-header-date):not(.group-header-course) td {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 14px;
+    width: auto;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--row-divider);
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+    text-align: right;
+  }
+
+  tr:not(.group-header-date):not(.group-header-course) td:last-child {
+    border-bottom: none;
+  }
+
+  tr:not(.group-header-date):not(.group-header-course) td::before {
+    content: attr(data-label);
+    flex: 0 0 auto;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: var(--text-dim);
+    text-align: left;
+  }
+
+  tr.group-header-date td,
+  tr.group-header-course td {
+    display: block;
+    width: 100%;
+  }
 }
 
 .no-action-label {

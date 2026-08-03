@@ -113,33 +113,49 @@ function groupByDateThenVenue(rows, venueKey) {
   return dates.map((date) => ({ date, venues: groupByVenueSorted(dateGroups[date], venueKey) }));
 }
 
+/* Parses a starting price (stored as plain decimal odds, same convention as
+ * price_at_commitment) for display. Returns null when not yet populated. */
+function formatStartingPrice(str) {
+  const n = parseFloat(str);
+  return isNaN(n) ? null : n.toFixed(2);
+}
+
 /* One race row: time, selection, price at publication, starting price, each
  * way, result, confidence. Date and venue are conveyed by the group header
  * above, not repeated here. Starting price is a separate field from price at
  * publication (price_at_commitment internally) — it's only populated once a
- * result is known, and never overwrites the publication price. */
+ * result is known, and never overwrites the publication price. Each cell
+ * carries data-label so the mobile stacked-card layout (see style.css) can
+ * show the column name without duplicating markup here. */
 function raceRowHtml(r) {
   const raceTime = raceTimeFromEntryId(r.entry_id);
   const pb = computePriceBlock(r.price_at_commitment);
   const qualifies = qualifiesForAction(r);
   const eachWay = pb.price !== null ? (pb.eachWayEligible ? "Yes" : "No") : "—";
-  const sp = (r.starting_price || "").trim();
+  const sp = formatStartingPrice(r.starting_price);
   const selectionHtml = qualifies
     ? mdEscape(r.selection || "")
     : `<span class="no-action-label">No qualifying action</span><span class="no-action-runner">${mdEscape(r.selection || "")}</span>`;
 
   return `<tr>
-    <td class="price-cell">${mdEscape(raceTime)}</td>
-    <td class="selection-cell">${selectionHtml}</td>
-    <td class="price-cell">${pb.price !== null ? pb.price.toFixed(2) : "—"}</td>
-    <td class="price-cell">${sp ? mdEscape(sp) : "—"}</td>
-    <td>${eachWay}</td>
-    <td class="${resultClass(r.result)}">${mdEscape(r.result || "pending")}</td>
-    <td>${mdEscape(r.confidence || "")}</td>
+    <td class="price-cell" data-label="Race Time">${mdEscape(raceTime)}</td>
+    <td class="selection-cell" data-label="Selection">${selectionHtml}</td>
+    <td class="price-cell" data-label="Price at publication">${pb.price !== null ? pb.price.toFixed(2) : "—"}</td>
+    <td class="price-cell" data-label="Starting Price">${sp !== null ? sp : "—"}</td>
+    <td data-label="Each Way">${eachWay}</td>
+    <td class="${resultClass(r.result)}" data-label="Result">${mdEscape(r.result || "pending")}</td>
+    <td data-label="Confidence">${mdEscape(r.confidence || "")}</td>
   </tr>`;
 }
 
-const RACE_TABLE_HEAD = `<thead><tr>
+/* Proportional column widths: Selection gets the most room (it holds the
+ * only variable-length prose) without dominating the row; the four numeric/
+ * short-text columns stay narrow. Only affects the desktop table — the
+ * mobile stacked-card layout (see style.css) ignores colgroup widths. */
+const RACE_TABLE_HEAD = `<colgroup>
+  <col class="col-time"><col class="col-selection"><col class="col-price"><col class="col-sp"><col class="col-ew"><col class="col-result"><col class="col-conf">
+</colgroup>
+<thead><tr>
   <th>Race Time</th><th>Selection</th><th>Price at publication</th><th>Starting Price</th><th>Each Way</th><th>Result</th><th>Confidence</th>
 </tr></thead>`;
 
@@ -494,7 +510,7 @@ function renderEntry(el, frontmatter, body, venueKey) {
   const venue = frontmatter[venueKey] || "";
   const pb = computePriceBlock(frontmatter.price_at_commitment);
   const raceTime = raceTimeFromEntryId(frontmatter.entry_id);
-  const sp = (frontmatter.starting_price || "").trim();
+  const sp = formatStartingPrice(frontmatter.starting_price);
 
   let qualifiesText;
   if (!selection) {
@@ -516,7 +532,7 @@ function renderEntry(el, frontmatter, body, venueKey) {
       <p class="verdict-meta">${metaBits.map(mdEscape).join(" · ")}</p>
       <div class="stat-row">
         <div class="stat-tile"><div class="value">${pb.price !== null ? pb.price.toFixed(2) : "—"}</div><div class="label">Price at publication</div></div>
-        <div class="stat-tile"><div class="value">${sp ? mdEscape(sp) : "—"}</div><div class="label">Starting price</div></div>
+        <div class="stat-tile"><div class="value">${sp !== null ? sp : "—"}</div><div class="label">Starting price</div></div>
         <div class="stat-tile"><div class="value">${pb.impliedProbability !== null ? pb.impliedProbability + "%" : "—"}</div><div class="label">Implied probability</div></div>
         <div class="stat-tile"><div class="value">${mdEscape(qualifiesText)}</div><div class="label">Qualifies for action</div></div>
       </div>
