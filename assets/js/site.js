@@ -113,13 +113,17 @@ function groupByDateThenVenue(rows, venueKey) {
   return dates.map((date) => ({ date, venues: groupByVenueSorted(dateGroups[date], venueKey) }));
 }
 
-/* One race row: time, selection, price, each way, result, confidence.
- * Date and venue are conveyed by the group header above, not repeated here. */
+/* One race row: time, selection, price at publication, starting price, each
+ * way, result, confidence. Date and venue are conveyed by the group header
+ * above, not repeated here. Starting price is a separate field from price at
+ * publication (price_at_commitment internally) — it's only populated once a
+ * result is known, and never overwrites the publication price. */
 function raceRowHtml(r) {
   const raceTime = raceTimeFromEntryId(r.entry_id);
   const pb = computePriceBlock(r.price_at_commitment);
   const qualifies = qualifiesForAction(r);
   const eachWay = pb.price !== null ? (pb.eachWayEligible ? "Yes" : "No") : "—";
+  const sp = (r.starting_price || "").trim();
   const selectionHtml = qualifies
     ? mdEscape(r.selection || "")
     : `<span class="no-action-label">No qualifying action</span><span class="no-action-runner">${mdEscape(r.selection || "")}</span>`;
@@ -128,6 +132,7 @@ function raceRowHtml(r) {
     <td class="price-cell">${mdEscape(raceTime)}</td>
     <td class="selection-cell">${selectionHtml}</td>
     <td class="price-cell">${pb.price !== null ? pb.price.toFixed(2) : "—"}</td>
+    <td class="price-cell">${sp ? mdEscape(sp) : "—"}</td>
     <td>${eachWay}</td>
     <td class="${resultClass(r.result)}">${mdEscape(r.result || "pending")}</td>
     <td>${mdEscape(r.confidence || "")}</td>
@@ -135,7 +140,7 @@ function raceRowHtml(r) {
 }
 
 const RACE_TABLE_HEAD = `<thead><tr>
-  <th>Race Time</th><th>Selection</th><th>Price</th><th>Each Way</th><th>Result</th><th>Confidence</th>
+  <th>Race Time</th><th>Selection</th><th>Price at publication</th><th>Starting Price</th><th>Each Way</th><th>Result</th><th>Confidence</th>
 </tr></thead>`;
 
 /* Renders the stat-tile summary for one sport's results.csv rows. */
@@ -192,7 +197,7 @@ function renderTodayTable(el, rows, venueKey) {
 
   const venues = groupByVenueSorted(todayRows, venueKey);
   const body = venues.map((v) =>
-    `<tr class="group-header-course"><td colspan="6">${mdEscape(v.venue)}</td></tr>` +
+    `<tr class="group-header-course"><td colspan="7">${mdEscape(v.venue)}</td></tr>` +
     v.rows.map(raceRowHtml).join("")
   ).join("");
 
@@ -222,9 +227,9 @@ function renderResultedTable(el, rows, venueKey) {
 
   const dateGroups = groupByDateThenVenue(resultedRows, venueKey);
   const body = dateGroups.map((dg) => {
-    const dateHeader = `<tr class="group-header-date"><td colspan="6">${formatDateUK(dg.date)}</td></tr>`;
+    const dateHeader = `<tr class="group-header-date"><td colspan="7">${formatDateUK(dg.date)}</td></tr>`;
     const venueRows = dg.venues.map((v) =>
-      `<tr class="group-header-course"><td colspan="6">${mdEscape(v.venue)}</td></tr>` +
+      `<tr class="group-header-course"><td colspan="7">${mdEscape(v.venue)}</td></tr>` +
       v.rows.map(raceRowHtml).join("")
     ).join("");
     return dateHeader + venueRows;
@@ -489,6 +494,7 @@ function renderEntry(el, frontmatter, body, venueKey) {
   const venue = frontmatter[venueKey] || "";
   const pb = computePriceBlock(frontmatter.price_at_commitment);
   const raceTime = raceTimeFromEntryId(frontmatter.entry_id);
+  const sp = (frontmatter.starting_price || "").trim();
 
   let qualifiesText;
   if (!selection) {
@@ -509,7 +515,8 @@ function renderEntry(el, frontmatter, body, venueKey) {
       </div>
       <p class="verdict-meta">${metaBits.map(mdEscape).join(" · ")}</p>
       <div class="stat-row">
-        <div class="stat-tile"><div class="value">${pb.price !== null ? pb.price.toFixed(2) : "—"}</div><div class="label">Price</div></div>
+        <div class="stat-tile"><div class="value">${pb.price !== null ? pb.price.toFixed(2) : "—"}</div><div class="label">Price at publication</div></div>
+        <div class="stat-tile"><div class="value">${sp ? mdEscape(sp) : "—"}</div><div class="label">Starting price</div></div>
         <div class="stat-tile"><div class="value">${pb.impliedProbability !== null ? pb.impliedProbability + "%" : "—"}</div><div class="label">Implied probability</div></div>
         <div class="stat-tile"><div class="value">${mdEscape(qualifiesText)}</div><div class="label">Qualifies for action</div></div>
       </div>
