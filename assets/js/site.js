@@ -214,6 +214,15 @@ function formatStartingPrice(str) {
  * result is known, and never overwrites the publication price. Each cell
  * carries data-label so the mobile stacked-card layout (see style.css) can
  * show the column name without duplicating markup here. */
+/* Footnote shown below a race table only when at least one of its rows
+ * carries a corrected price (see raceRowHtml's price-marker). Same
+ * one-level-below-root path assumption as raceRowHtml. */
+function correctionFootnoteHtml(rows) {
+  const hasCorrection = rows.some((r) => effectivePriceBlock(r).corrected);
+  if (!hasCorrection) return "";
+  return '<p class="table-footnote">† price recorded via logged correction, see <a href="../corrections.html">CORRECTIONS.md</a>.</p>';
+}
+
 /* Assumes it's always rendered from a page one level below repo root
  * (horses/index.html, greyhounds/index.html) — the corrections.html link
  * below is relative to that. Update if raceRowHtml grows other callers. */
@@ -234,14 +243,17 @@ function raceRowHtml(r) {
     selectionHtml = `<span class="no-action-label">No qualifying action</span><span class="no-action-runner">${mdEscape(r.selection || "")}</span>`;
   }
 
+  // The marker slot is always emitted, empty when there's no correction,
+  // so every numeric price cell reserves the same trailing width and
+  // prices align regardless of whether a given row carries a marker.
   let priceHtml;
   if (unrecorded) {
     priceHtml = '<span class="price-unrecorded">Price not recorded</span>';
   } else if (pb.price !== null) {
-    const correctedTag = pb.corrected
-      ? ` <a class="corrected-tag" href="../corrections.html#${mdEscape(pb.correctionSlug)}" title="Price corrected after a data capture failure — see Corrections">corrected*</a>`
-      : "";
-    priceHtml = `${pb.price.toFixed(2)}${correctedTag}`;
+    const marker = pb.corrected
+      ? `<a class="price-marker" href="../corrections.html#${mdEscape(pb.correctionSlug)}" title="Price recorded via logged correction — see CORRECTIONS.md">†</a>`
+      : '<span class="price-marker"></span>';
+    priceHtml = `<span class="price-num">${pb.price.toFixed(2)}</span>${marker}`;
   } else {
     priceHtml = "—";
   }
@@ -342,7 +354,8 @@ function renderTodayTable(el, rows, venueKey) {
         ${RACE_TABLE_HEAD}
         <tbody>${body}</tbody>
       </table>
-    </div>`;
+    </div>
+    ${correctionFootnoteHtml(todayRows)}`;
 }
 
 /*
@@ -376,7 +389,8 @@ function renderResultedTable(el, rows, venueKey) {
         ${RACE_TABLE_HEAD}
         <tbody>${body}</tbody>
       </table>
-    </div>`;
+    </div>
+    ${correctionFootnoteHtml(resultedRows)}`;
 }
 
 /* Renders a compact strike-rate-only summary card, used on the site home page. */
@@ -650,8 +664,11 @@ function renderEntry(el, frontmatter, body, venueKey) {
   // entry.html lives one level below repo root (horses/, greyhounds/),
   // same as index.html — see raceRowHtml's equivalent link and comment.
   const priceValue = pb.price !== null
-    ? `${pb.price.toFixed(2)}${pb.corrected ? ` <a class="corrected-tag" href="../corrections.html#${mdEscape(pb.correctionSlug)}" title="Price corrected after a data capture failure — see Corrections">corrected*</a>` : ""}`
+    ? `${pb.price.toFixed(2)}${pb.corrected ? `<a class="price-marker" href="../corrections.html#${mdEscape(pb.correctionSlug)}" title="Price recorded via logged correction — see CORRECTIONS.md">†</a>` : ""}`
     : "—";
+  const correctionFootnote = pb.corrected
+    ? '<p class="table-footnote">† price recorded via logged correction, see <a href="../corrections.html">CORRECTIONS.md</a>.</p>'
+    : "";
 
   const metaBits = [venue, formatDateUK(frontmatter.date), raceTime].filter(Boolean);
 
@@ -668,6 +685,7 @@ function renderEntry(el, frontmatter, body, venueKey) {
         <div class="stat-tile"><div class="value">${pb.impliedProbability !== null ? pb.impliedProbability + "%" : "—"}</div><div class="label">Implied probability</div></div>
         <div class="stat-tile"><div class="value">${mdEscape(qualifiesText)}</div><div class="label">Qualifies for action</div></div>
       </div>
+      ${correctionFootnote}
       ${frontmatter.result ? `<p class="verdict-result ${resultClass(frontmatter.result)}">Result: ${mdEscape(frontmatter.result)}</p>` : ""}
       ${frontmatter.principal_risk ? `<p class="principal-risk"><strong>Principal risk:</strong> ${mdEscape(frontmatter.principal_risk)}</p>` : ""}
     </div>

@@ -461,11 +461,33 @@ tr.group-header-course td {
   font-style: italic;
 }
 
-.corrected-tag {
+/* .price-num + .price-marker together make up a price cell's content.
+ * .price-marker always reserves the same width whether or not it holds
+ * a †, so the digits line up across rows regardless of which rows carry
+ * a marker — see raceRowHtml/renderEntry in site.js. */
+.price-num {
   display: inline-block;
-  margin-left: 4px;
-  font-size: 0.75rem;
+}
+
+.price-marker {
+  display: inline-block;
+  width: 0.85em;
+  font-size: 0.7em;
+  line-height: 1;
+  vertical-align: super;
+  text-align: left;
   color: var(--accent-dim);
+  text-decoration: none;
+}
+
+a.price-marker:hover {
+  text-decoration: underline;
+}
+
+.table-footnote {
+  margin: 8px 0 0;
+  font-size: 0.8rem;
+  color: var(--text-faint);
 }
 
 .result-win { color: var(--win); font-weight: 600; }
