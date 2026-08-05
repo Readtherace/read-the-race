@@ -449,14 +449,16 @@ function renderDateBrowser(el, entries, viewerPath) {
   }).join("");
 }
 
-/* Fetches a framework markdown file and renders it into the given container. */
-async function loadFrameworkInto(el, mdUrl) {
+/* Fetches a markdown file (framework page or README) and renders it into
+ * the given container. Pass {links: true} to render [text](url) as <a> —
+ * used by the About page; framework pages don't need it and leave it off. */
+async function loadFrameworkInto(el, mdUrl, opts) {
   const text = await fetchText(mdUrl);
   if (text === null) {
     el.innerHTML = '<div class="empty-state">Framework text could not be loaded.</div>';
     return;
   }
-  el.innerHTML = renderMarkdown(text);
+  el.innerHTML = renderMarkdown(text, opts);
 }
 
 /*

@@ -2,7 +2,8 @@
  * Minimal, dependency-free markdown renderer.
  * Supports only the subset used by the Read The Race framework pages:
  * #, ##, ### headings; **bold**; > blockquote; - / 1. lists; --- rules;
- * plain paragraphs. Not a general-purpose markdown parser.
+ * plain paragraphs; [text](url) links (opt-in, see mdInline). Not a
+ * general-purpose markdown parser.
  */
 
 function mdEscape(s) {
@@ -12,11 +13,20 @@ function mdEscape(s) {
     .replace(/>/g, "&gt;");
 }
 
-function mdInline(s) {
-  return mdEscape(s).replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+/* `opts.links` opts in to rendering [text](url) as <a> — off by default so
+ * existing callers (entry bodies, framework pages) render exactly as before;
+ * only the About page, which has no other way to link out, turns it on. */
+function mdInline(s, opts) {
+  let out = mdEscape(s)
+    .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
+    .replace(/`([^`]+)`/g, "<code>$1</code>");
+  if (opts && opts.links) {
+    out = out.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>');
+  }
+  return out;
 }
 
-function renderMarkdown(md) {
+function renderMarkdown(md, opts) {
   const lines = md.replace(/\r\n/g, "\n").split("\n");
   const html = [];
   let i = 0;
@@ -34,19 +44,19 @@ function renderMarkdown(md) {
     }
 
     if (line.startsWith("### ")) {
-      html.push(`<h3>${mdInline(line.slice(4))}</h3>`);
+      html.push(`<h3>${mdInline(line.slice(4), opts)}</h3>`);
       inHeaderBlock = false;
       i++;
       continue;
     }
     if (line.startsWith("## ")) {
-      html.push(`<h2>${mdInline(line.slice(3))}</h2>`);
+      html.push(`<h2>${mdInline(line.slice(3), opts)}</h2>`);
       inHeaderBlock = false;
       i++;
       continue;
     }
     if (line.startsWith("# ")) {
-      html.push(`<h1>${mdInline(line.slice(2))}</h1>`);
+      html.push(`<h1>${mdInline(line.slice(2), opts)}</h1>`);
       inHeaderBlock = true;
       i++;
       continue;
@@ -59,10 +69,23 @@ function renderMarkdown(md) {
       continue;
     }
 
+    if (line.trim().startsWith("```")) {
+      i++;
+      const codeLines = [];
+      while (i < lines.length && !lines[i].trim().startsWith("```")) {
+        codeLines.push(mdEscape(lines[i]));
+        i++;
+      }
+      i++; // skip the closing fence
+      html.push(`<pre><code>${codeLines.join("\n")}</code></pre>`);
+      inHeaderBlock = false;
+      continue;
+    }
+
     if (line.startsWith("> ")) {
       const quoteLines = [];
       while (i < lines.length && lines[i].startsWith("> ")) {
-        quoteLines.push(mdInline(lines[i].slice(2)));
+        quoteLines.push(mdInline(lines[i].slice(2), opts));
         i++;
       }
       html.push(`<blockquote>${quoteLines.join("<br>")}</blockquote>`);
@@ -84,7 +107,7 @@ function renderMarkdown(md) {
         }
         i++;
       }
-      html.push(`<ul>${items.map((t) => `<li>${mdInline(t)}</li>`).join("")}</ul>`);
+      html.push(`<ul>${items.map((t) => `<li>${mdInline(t, opts)}</li>`).join("")}</ul>`);
       inHeaderBlock = false;
       continue;
     }
@@ -102,7 +125,7 @@ function renderMarkdown(md) {
         }
         i++;
       }
-      html.push(`<ol>${items.map((t) => `<li>${mdInline(t)}</li>`).join("")}</ol>`);
+      html.push(`<ol>${items.map((t) => `<li>${mdInline(t, opts)}</li>`).join("")}</ol>`);
       inHeaderBlock = false;
       continue;
     }
@@ -111,7 +134,7 @@ function renderMarkdown(md) {
     // neighbouring paragraph lines.
     if (/^\*\*.+\*\*$/.test(line.trim())) {
       const cls = inHeaderBlock ? ' class="meta-line"' : "";
-      html.push(`<p${cls}>${mdInline(line.trim())}</p>`);
+      html.push(`<p${cls}>${mdInline(line.trim(), opts)}</p>`);
       i++;
       continue;
     }
@@ -135,7 +158,7 @@ function renderMarkdown(md) {
       i++;
     }
     if (paraLines.length > 0) {
-      html.push(`<p>${mdInline(paraLines.join(" "))}</p>`);
+      html.push(`<p>${mdInline(paraLines.join(" "), opts)}</p>`);
     }
   }
 

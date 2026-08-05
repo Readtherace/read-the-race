@@ -76,8 +76,8 @@ first 100 recorded selections) or through an emergency correction for a
 factual error, a calculation fault, a data integrity failure, or a
 regulatory change — never because a selection won or lost.
 
-Read the full text: [horse framework](frameworks/HORSE-FRAMEWORK-v2.0.md) ·
-[greyhound framework](frameworks/GREYHOUND-FRAMEWORK-v2.0.md).
+Read the full text: [horse framework](horses/framework.html) ·
+[greyhound framework](greyhounds/framework.html).
 
 ## The record
 

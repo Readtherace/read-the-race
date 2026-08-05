@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>About the method — Read The Race</title>
+<meta name="description" content="Why Read The Race exists and how its locked, versioned frameworks work.">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <a class="site-title" href="index.html">Read <span>The</span> Race</a>
+    <p class="site-tagline">About the method</p>
+    <nav class="site-nav">
+      <a href="index.html">Home</a>
+      <a href="horses/index.html">Horses</a>
+      <a href="greyhounds/index.html">Greyhounds</a>
+      <a href="about.html" class="active">About</a>
+    </nav>
+  </div>
+</header>
+
+<main class="container">
+
+  <div class="notice">
+    <strong>18+. Educational racing analysis only.</strong> Gambling involves
+    financial risk. This site does not accept stakes or provide bookmaker
+    services. Analysis is AI-assisted.
+  </div>
+
+  <div id="about-content" class="prose">
+    <div class="empty-state">Loading…</div>
+  </div>
+
+</main>
+
+<footer class="site-footer">
+  <p><strong>18+. Educational racing analysis only.</strong> Gambling
+  involves financial risk. This site does not accept stakes or provide
+  bookmaker services. Analysis is AI-assisted.</p>
+</footer>
+
+<script src="assets/js/csv.js"></script>
+<script src="assets/js/markdown.js"></script>
+<script src="assets/js/site.js"></script>
+<script>
+  loadFrameworkInto(document.getElementById("about-content"), "README.md", { links: true });
+</script>
+
+</body>
+</html>
