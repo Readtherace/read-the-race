@@ -41,3 +41,59 @@ committed; this note exists so the inconsistency is visible without
 altering the pre-race record. See CLAUDE.md's Entry write-up style
 section for the checklist item added as a result, meant to catch this
 before commit in future entries.
+
+---
+
+## 2026-08-05 — Five Sligo entries, price capture failure (emergency correction exception — data integrity failure)
+
+**Entries affected:**
+- `horses/entries/2026/08-05/sligo-1830.md` (Lady Patrona)
+- `horses/entries/2026/08-05/sligo-1900.md` (Tatianna)
+- `horses/entries/2026/08-05/sligo-1930.md` (Glen Breeze)
+- `horses/entries/2026/08-05/sligo-2000.md` (Private Larry)
+- `horses/entries/2026/08-05/sligo-2030.md` (Deluca Chop)
+
+All five (unedited). `horses/results.csv` rows for these entries also
+unedited — `price_at_commitment` there remains as originally recorded.
+
+**Issue:** each entry's Price section states no price was available in
+the source data at commitment. The operator has confirmed this was a
+capture failure, not a genuine absence of data: a betting forecast
+price existed on the source card before these races ran and was not
+correctly extracted while working the batch. This is a data integrity
+failure under the framework's emergency correction exception, not a
+predictive rule change and not a case of reopening for later price
+movement — the price being recorded below existed at the original time
+of commitment.
+
+**Correct position**, using the price at commitment supplied by the
+operator, pre-race:
+
+- **Lady Patrona** (Sligo 18:30): decimal price 2.0. Implied probability
+  50.0%. Outside the 4/1–6/1 band. Not an each-way price (below 6.00).
+  Qualifies for action — at exactly 2.00, the margin is thin.
+- **Tatianna** (Sligo 19:00): decimal price 9.5. Implied probability
+  10.5%. Outside the 4/1–6/1 band (above it). At 6.00 or above; a
+  13-runner nursery handicap is a suitable field size for each-way
+  terms, and she was the framework's top-ranked selection, so each-way
+  is a reasonable consideration here. Qualifies for action.
+- **Glen Breeze** (Sligo 19:30): decimal price 5.0. Implied probability
+  20.0%. Inside the 4/1–6/1 band (at the 4/1 boundary). Not an each-way
+  price (below 6.00). Qualifies for action.
+- **Private Larry** (Sligo 20:00): decimal price 3.0. Implied
+  probability 33.3%. Outside the 4/1–6/1 band. Not an each-way price
+  (below 6.00). Qualifies for action — at exactly 3.00, the margin is
+  thin.
+- **Deluca Chop** (Sligo 20:30): decimal price 6.0. Implied probability
+  16.7%. Inside the 4/1–6/1 band (at the 6/1 boundary). At 6.00 or
+  above; a 14-runner handicap is a suitable field size for each-way
+  terms, and he was the framework's top-ranked selection on a
+  currently-winning run of form, so each-way is a reasonable
+  consideration here. Qualifies for action.
+
+**Not corrected in place.** `price_at_commitment` is one of the
+immutable pre-race fields once an entry is committed (see CLAUDE.md);
+this note exists so the correct figures are visible on the record
+without altering the frozen entry files or `results.csv`. `starting_price`
+and `result` will still be filled in for these entries in the normal way
+once each race is run.

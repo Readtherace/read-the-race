@@ -100,6 +100,17 @@ read-the-race/
 6. Follow the Language rules and Source/copyright rules below, everywhere.
 7. Every entry needs a **complete Price section** (see Price rules below).
    An entry missing it is incomplete and must not be committed.
+7a. **Before committing a batch, check every entry recording no price at
+    commitment against the source card one more time.** A repo pre-commit
+    hook (`scripts/check-missing-prices.sh`, installed at
+    `.git/hooks/pre-commit`) blocks any commit touching an entry whose
+    Price section says the price was unavailable, and requires an
+    explicit `ALLOW_MISSING_PRICE=1` override to proceed. The hook can
+    only see staged files, not the original source card, so it cannot
+    verify a price actually existed — it exists to force a deliberate
+    re-check rather than a silent default to "no qualifying action."
+    Confirm with the operator before overriding if there's any doubt.
+    (See CORRECTIONS.md, 5 August 2026, for the incident this closes.)
 8. **Once the result is known**, fill in `result` (and `starting_price` if
    available) in the CSV row and the manifest.json entry only. **Never
    edit the entry file itself** — it stays exactly as committed pre-race,
