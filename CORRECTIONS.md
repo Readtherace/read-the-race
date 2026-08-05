@@ -98,6 +98,19 @@ without altering the frozen entry files or `results.csv`. `starting_price`
 and `result` will still be filled in for these entries in the normal way
 once each race is run.
 
+Machine-readable record, read by the site to overlay the corrected price
+on the running record table (never written back into the entry file or
+`results.csv`; the site marks any row shown this way as corrected and
+links back to this section):
+
+```
+entry_id: 20260805-sligo-1830, price_at_commitment: 2.0
+entry_id: 20260805-sligo-1900, price_at_commitment: 9.5
+entry_id: 20260805-sligo-1930, price_at_commitment: 5.0
+entry_id: 20260805-sligo-2000, price_at_commitment: 3.0
+entry_id: 20260805-sligo-2030, price_at_commitment: 6.0
+```
+
 ---
 
 ## 2026-08-05 — Three Yarmouth entries, same price capture failure (emergency correction exception — data integrity failure)
@@ -131,3 +144,12 @@ operator, pre-race:
 **Not corrected in place**, for the same reason as above:
 `price_at_commitment` is immutable once committed. `starting_price` and
 `result` will still be filled in normally once each race is run.
+
+Machine-readable record, read by the site the same way as the Sligo
+correction above:
+
+```
+entry_id: 20260805-yarmouth-1840, price_at_commitment: 3.25
+entry_id: 20260805-yarmouth-1940, price_at_commitment: 2.88
+entry_id: 20260805-yarmouth-2010, price_at_commitment: 3.0
+```

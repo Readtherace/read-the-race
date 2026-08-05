@@ -456,6 +456,18 @@ tr.group-header-course td {
   color: var(--text-faint);
 }
 
+.price-unrecorded {
+  color: var(--text-faint);
+  font-style: italic;
+}
+
+.corrected-tag {
+  display: inline-block;
+  margin-left: 4px;
+  font-size: 0.75rem;
+  color: var(--accent-dim);
+}
+
 .result-win { color: var(--win); font-weight: 600; }
 .result-lose { color: var(--lose); }
 .result-void { color: var(--void); }
@@ -524,6 +536,13 @@ tr.group-header-course td {
   background: transparent;
   border-color: var(--border);
   border-style: dashed;
+}
+
+.form-square.form-unrecorded {
+  background: repeating-linear-gradient(
+    45deg, var(--border), var(--border) 2px, transparent 2px, transparent 5px
+  );
+  border-color: var(--border);
 }
 
 .form-strip-caption {

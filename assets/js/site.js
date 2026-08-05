@@ -31,7 +31,7 @@ function classifyResult(result) {
   if (!r) return "pending";
   if (r.includes("no qualifying")) return "no-action";
   if (r.includes("void") || r.includes("non-runner") || r.includes("nonrunner") || r.includes("non runner")) return "void";
-  if (/^(win|won)\b/.test(r)) return "win";
+  if (/^(win|won|1st)\b/.test(r)) return "win";
   return "lose";
 }
 
@@ -43,15 +43,102 @@ function resultClass(result) {
 }
 
 /*
+ * Parses CORRECTIONS.md's machine-readable "entry_id: X, price_at_commitment: Y"
+ * lines (inside fenced code blocks) into a map keyed by entry_id, each
+ * tagged with the slug of the heading section it appeared under. The slug
+ * is computed with the same slugify()/uniqueness rules renderMarkdown uses
+ * for opts.headingIds (see markdown.js), so it matches what corrections.html
+ * actually renders as that section's id — this is a plain-text scan, not
+ * the full block parser, so it only needs to track headings and the record
+ * lines, not every markdown construct in between.
+ */
+function parseCorrections(text) {
+  const lines = text.replace(/\r\n/g, "\n").split("\n");
+  const seenSlugs = {};
+  let currentSlug = "";
+  const byEntryId = {};
+
+  lines.forEach((line) => {
+    const headingMatch = /^#{1,6}\s+(.+)$/.exec(line);
+    if (headingMatch) {
+      let slug = slugify(headingMatch[1]) || "section";
+      if (seenSlugs[slug]) {
+        seenSlugs[slug]++;
+        slug = `${slug}-${seenSlugs[slug]}`;
+      } else {
+        seenSlugs[slug] = 1;
+      }
+      currentSlug = slug;
+      return;
+    }
+    const recordMatch = /^entry_id:\s*([\w-]+),\s*price_at_commitment:\s*([\d.]+)\s*$/.exec(line.trim());
+    if (recordMatch) {
+      byEntryId[recordMatch[1]] = { price: recordMatch[2], slug: currentSlug };
+    }
+  });
+
+  return byEntryId;
+}
+
+/* Fetches and parses CORRECTIONS.md. Returns {} (no corrections applied)
+ * if the file can't be fetched, rather than failing the whole page. */
+async function loadCorrections(url) {
+  const text = await fetchText(url);
+  if (text === null) return {};
+  return parseCorrections(text);
+}
+
+/*
+ * Attaches a corrected price onto rows/frontmatter objects that have no
+ * price of their own recorded, purely for display — never mutates
+ * price_at_commitment itself, and never overrides a price that IS
+ * recorded (a correction only ever fills a genuine gap). corrections is
+ * the map returned by loadCorrections/parseCorrections.
+ */
+function applyCorrections(items, corrections) {
+  items.forEach((item) => {
+    const hasPrice = !!(item.price_at_commitment && String(item.price_at_commitment).trim());
+    const fix = corrections[item.entry_id];
+    if (!hasPrice && fix) {
+      item._correctedPrice = fix.price;
+      item._correctionSlug = fix.slug;
+    }
+  });
+  return items;
+}
+
+/* Price block for display purposes: the recorded price if there is one,
+ * otherwise a corrected price applied by applyCorrections, tagged so
+ * callers can show it was corrected and link back to the correction. */
+function effectivePriceBlock(item) {
+  const raw = computePriceBlock(item.price_at_commitment);
+  if (raw.price !== null) return Object.assign({ corrected: false }, raw);
+  if (item._correctedPrice) {
+    const corrected = computePriceBlock(item._correctedPrice);
+    return Object.assign({ corrected: true, correctionSlug: item._correctionSlug }, corrected);
+  }
+  return Object.assign({ corrected: false }, raw);
+}
+
+/*
  * Whether an entry qualifies for action under the Stage 5 price policy:
- * a selection was named AND the recorded price is 2.00 or above. This is
- * independent of whether the result is known yet — qualification is
- * decided at commitment, not at settlement.
+ * a selection was named AND the recorded (or corrected) price is 2.00 or
+ * above. This is independent of whether the result is known yet —
+ * qualification is decided at commitment, not at settlement.
  */
 function qualifiesForAction(row) {
   const hasSelection = !!(row.selection && row.selection.trim());
-  const pb = computePriceBlock(row.price_at_commitment);
+  const pb = effectivePriceBlock(row);
   return hasSelection && pb.qualifies === true;
+}
+
+/* True when a row has a named selection but genuinely no price on record
+ * at all — not even a correction. Distinct from "below 2.00": this is a
+ * data gap, not a Stage 5 rule outcome, and must never be labelled or
+ * counted as "no qualifying action". */
+function isPriceUnrecorded(row) {
+  const hasSelection = !!(row.selection && row.selection.trim());
+  return hasSelection && effectivePriceBlock(row).price === null;
 }
 
 /* Extracts the race off-time from entry_id's YYYYMMDD-<slug>-HHMM suffix. */
@@ -127,20 +214,42 @@ function formatStartingPrice(str) {
  * result is known, and never overwrites the publication price. Each cell
  * carries data-label so the mobile stacked-card layout (see style.css) can
  * show the column name without duplicating markup here. */
+/* Assumes it's always rendered from a page one level below repo root
+ * (horses/index.html, greyhounds/index.html) — the corrections.html link
+ * below is relative to that. Update if raceRowHtml grows other callers. */
 function raceRowHtml(r) {
   const raceTime = raceTimeFromEntryId(r.entry_id);
-  const pb = computePriceBlock(r.price_at_commitment);
+  const pb = effectivePriceBlock(r);
   const qualifies = qualifiesForAction(r);
+  const unrecorded = isPriceUnrecorded(r);
   const eachWay = pb.price !== null ? (pb.eachWayEligible ? "Yes" : "No") : "—";
   const sp = formatStartingPrice(r.starting_price);
-  const selectionHtml = qualifies
-    ? mdEscape(r.selection || "")
-    : `<span class="no-action-label">No qualifying action</span><span class="no-action-runner">${mdEscape(r.selection || "")}</span>`;
+
+  let selectionHtml;
+  if (qualifies) {
+    selectionHtml = mdEscape(r.selection || "");
+  } else if (unrecorded) {
+    selectionHtml = mdEscape(r.selection || "");
+  } else {
+    selectionHtml = `<span class="no-action-label">No qualifying action</span><span class="no-action-runner">${mdEscape(r.selection || "")}</span>`;
+  }
+
+  let priceHtml;
+  if (unrecorded) {
+    priceHtml = '<span class="price-unrecorded">Price not recorded</span>';
+  } else if (pb.price !== null) {
+    const correctedTag = pb.corrected
+      ? ` <a class="corrected-tag" href="../corrections.html#${mdEscape(pb.correctionSlug)}" title="Price corrected after a data capture failure — see Corrections">corrected*</a>`
+      : "";
+    priceHtml = `${pb.price.toFixed(2)}${correctedTag}`;
+  } else {
+    priceHtml = "—";
+  }
 
   return `<tr>
     <td class="price-cell" data-label="Race Time">${mdEscape(raceTime)}</td>
     <td class="selection-cell" data-label="Selection">${selectionHtml}</td>
-    <td class="price-cell" data-label="Price at publication">${pb.price !== null ? pb.price.toFixed(2) : "—"}</td>
+    <td class="price-cell" data-label="Price at publication">${priceHtml}</td>
     <td class="price-cell" data-label="Starting Price">${sp !== null ? sp : "—"}</td>
     <td data-label="Each Way">${eachWay}</td>
     <td class="${resultClass(r.result)}" data-label="Result">${mdEscape(r.result || "pending")}</td>
@@ -170,8 +279,13 @@ function renderStats(el, rows) {
   let decided = 0;
   let qualifying = 0;
   let noAction = 0;
+  let unrecorded = 0;
 
   rows.forEach((r) => {
+    if (isPriceUnrecorded(r)) {
+      unrecorded++;
+      return;
+    }
     if (qualifiesForAction(r)) {
       qualifying++;
       const k = classifyResult(r.result);
@@ -187,12 +301,17 @@ function renderStats(el, rows) {
     ? `${wins}/${decided}${pct !== null ? ` (${pct}%)` : ""}`
     : "0/0";
 
+  const unrecordedTile = unrecorded > 0
+    ? `<div class="stat-tile"><div class="value">${unrecorded}</div><div class="label">Price not recorded</div></div>`
+    : "";
+
   el.innerHTML = `
     <div class="stat-row">
       <div class="stat-tile"><div class="value">${rows.length}</div><div class="label">Entries</div></div>
       <div class="stat-tile"><div class="value">${qualifying}</div><div class="label">Qualifying</div></div>
       <div class="stat-tile"><div class="value">${strikeRateText}</div><div class="label">Strike rate</div></div>
       <div class="stat-tile"><div class="value">${noAction}</div><div class="label">No action</div></div>
+      ${unrecordedTile}
     </div>`;
 }
 
@@ -306,10 +425,14 @@ function renderFormStrip(el, rows) {
 
   const squares = last20.map((r) => {
     const qualifies = qualifiesForAction(r);
+    const unrecorded = isPriceUnrecorded(r);
     const k = classifyResult(r.result);
     let cls = "form-pending";
     let label = "pending";
-    if (!qualifies) {
+    if (unrecorded) {
+      cls = "form-unrecorded";
+      label = "price not recorded";
+    } else if (!qualifies) {
       cls = "form-no-action";
       label = "no qualifying action";
     } else if (k === "win") {
@@ -338,6 +461,7 @@ function renderFormStrip(el, rows) {
         <span><span class="form-square form-win"></span>Won</span>
         <span><span class="form-square form-lose"></span>Lost</span>
         <span><span class="form-square form-no-action"></span>No qualifying action</span>
+        <span><span class="form-square form-unrecorded"></span>Price not recorded</span>
       </div>
     </div>`;
 }
@@ -390,8 +514,8 @@ function renderPriceBandChart(el, rows) {
     let wins = 0;
     let decided = 0;
     rows.forEach((r) => {
-      const price = parseFloat(r.price_at_commitment);
-      if (isNaN(price) || !band.test(price)) return;
+      const price = effectivePriceBlock(r).price;
+      if (price === null || !band.test(price)) return;
       const k = classifyResult(r.result);
       if (k === "win") { wins++; decided++; }
       else if (k === "lose") { decided++; }
@@ -510,7 +634,7 @@ function renderEntry(el, frontmatter, body, venueKey) {
   const confidence = (frontmatter.confidence || "").trim();
   const confidenceKey = confidence.toLowerCase();
   const venue = frontmatter[venueKey] || "";
-  const pb = computePriceBlock(frontmatter.price_at_commitment);
+  const pb = effectivePriceBlock(frontmatter);
   const raceTime = raceTimeFromEntryId(frontmatter.entry_id);
   const sp = formatStartingPrice(frontmatter.starting_price);
 
@@ -518,10 +642,16 @@ function renderEntry(el, frontmatter, body, venueKey) {
   if (!selection) {
     qualifiesText = "No qualifying action";
   } else if (pb.price === null) {
-    qualifiesText = "Pending";
+    qualifiesText = "Price not recorded";
   } else {
     qualifiesText = pb.qualifies ? "Yes" : "No — below 2.00";
   }
+
+  // entry.html lives one level below repo root (horses/, greyhounds/),
+  // same as index.html — see raceRowHtml's equivalent link and comment.
+  const priceValue = pb.price !== null
+    ? `${pb.price.toFixed(2)}${pb.corrected ? ` <a class="corrected-tag" href="../corrections.html#${mdEscape(pb.correctionSlug)}" title="Price corrected after a data capture failure — see Corrections">corrected*</a>` : ""}`
+    : "—";
 
   const metaBits = [venue, formatDateUK(frontmatter.date), raceTime].filter(Boolean);
 
@@ -533,7 +663,7 @@ function renderEntry(el, frontmatter, body, venueKey) {
       </div>
       <p class="verdict-meta">${metaBits.map(mdEscape).join(" · ")}</p>
       <div class="stat-row">
-        <div class="stat-tile"><div class="value">${pb.price !== null ? pb.price.toFixed(2) : "—"}</div><div class="label">Price at publication</div></div>
+        <div class="stat-tile"><div class="value">${priceValue}</div><div class="label">Price at publication</div></div>
         <div class="stat-tile"><div class="value">${sp !== null ? sp : "—"}</div><div class="label">Starting price</div></div>
         <div class="stat-tile"><div class="value">${pb.impliedProbability !== null ? pb.impliedProbability + "%" : "—"}</div><div class="label">Implied probability</div></div>
         <div class="stat-tile"><div class="value">${mdEscape(qualifiesText)}</div><div class="label">Qualifies for action</div></div>
@@ -549,13 +679,18 @@ function renderEntry(el, frontmatter, body, venueKey) {
   el.innerHTML = cardHtml;
 }
 
-/* Fetches one entry markdown file and renders it via renderEntry. */
-async function loadEntryInto(el, mdUrl, venueKey) {
+/* Fetches one entry markdown file and renders it via renderEntry. opts.corrections,
+ * if given, is a parseCorrections() map applied to the frontmatter before
+ * rendering — see applyCorrections. */
+async function loadEntryInto(el, mdUrl, venueKey, opts) {
   const text = await fetchText(mdUrl);
   if (text === null) {
     el.innerHTML = '<div class="empty-state">Entry could not be loaded.</div>';
     return;
   }
   const { data, body } = parseFrontmatter(text);
+  if (opts && opts.corrections) {
+    applyCorrections([data], opts.corrections);
+  }
   renderEntry(el, data, body, venueKey);
 }

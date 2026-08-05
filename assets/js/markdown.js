@@ -26,6 +26,17 @@ function mdInline(s, opts) {
   return out;
 }
 
+/* Kebab-case slug for an opt-in heading id (see renderMarkdown's
+ * opts.headingIds) — e.g. for linking directly to one CORRECTIONS.md
+ * section. Not guaranteed unique across a document on its own; callers
+ * needing that append a counter. */
+function slugify(s) {
+  return s
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
 function renderMarkdown(md, opts) {
   const lines = md.replace(/\r\n/g, "\n").split("\n");
   const html = [];
@@ -34,6 +45,18 @@ function renderMarkdown(md, opts) {
   // block) — those render dim and compact. Full-bold lines elsewhere in the
   // document (e.g. "**Confidence definitions:**") render as normal bold paragraphs.
   let inHeaderBlock = false;
+  const seenSlugs = {};
+  function headingId(text) {
+    if (!(opts && opts.headingIds)) return "";
+    let slug = slugify(text) || "section";
+    if (seenSlugs[slug]) {
+      seenSlugs[slug]++;
+      slug = `${slug}-${seenSlugs[slug]}`;
+    } else {
+      seenSlugs[slug] = 1;
+    }
+    return ` id="${slug}"`;
+  }
 
   while (i < lines.length) {
     const line = lines[i];
@@ -44,19 +67,19 @@ function renderMarkdown(md, opts) {
     }
 
     if (line.startsWith("### ")) {
-      html.push(`<h3>${mdInline(line.slice(4), opts)}</h3>`);
+      html.push(`<h3${headingId(line.slice(4))}>${mdInline(line.slice(4), opts)}</h3>`);
       inHeaderBlock = false;
       i++;
       continue;
     }
     if (line.startsWith("## ")) {
-      html.push(`<h2>${mdInline(line.slice(3), opts)}</h2>`);
+      html.push(`<h2${headingId(line.slice(3))}>${mdInline(line.slice(3), opts)}</h2>`);
       inHeaderBlock = false;
       i++;
       continue;
     }
     if (line.startsWith("# ")) {
-      html.push(`<h1>${mdInline(line.slice(2), opts)}</h1>`);
+      html.push(`<h1${headingId(line.slice(2))}>${mdInline(line.slice(2), opts)}</h1>`);
       inHeaderBlock = true;
       i++;
       continue;

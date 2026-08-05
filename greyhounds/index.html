@@ -76,7 +76,11 @@
 <script src="../assets/js/site.js"></script>
 <script>
   (async () => {
-    const rows = await loadCSVRows("results.csv");
+    const [rows, corrections] = await Promise.all([
+      loadCSVRows("results.csv"),
+      loadCorrections("../CORRECTIONS.md"),
+    ]);
+    applyCorrections(rows, corrections);
     renderStats(document.getElementById("stats"), rows);
     renderFormStrip(document.getElementById("form-strip"), rows);
     renderTodayTable(document.getElementById("today-table"), rows, "track");

@@ -48,7 +48,7 @@
 <script src="../assets/js/markdown.js"></script>
 <script src="../assets/js/site.js"></script>
 <script>
-  (() => {
+  (async () => {
     const params = new URLSearchParams(window.location.search);
     const file = params.get("file");
     const root = document.getElementById("entry-root");
@@ -56,7 +56,8 @@
       root.innerHTML = '<div class="empty-state">No entry specified.</div>';
       return;
     }
-    loadEntryInto(root, `entries/${file}`, "course");
+    const corrections = await loadCorrections("../CORRECTIONS.md");
+    loadEntryInto(root, `entries/${file}`, "course", { corrections });
   })();
 </script>
 
