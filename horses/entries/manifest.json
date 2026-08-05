@@ -236,5 +236,96 @@
     "time": "17:20",
     "file": "2026/08-03/naas-1720.md",
     "result": "2nd"
+  },
+  {
+    "date": "2026-08-05",
+    "venue": "Sligo",
+    "time": "17:30",
+    "file": "2026/08-05/sligo-1730.md",
+    "result": ""
+  },
+  {
+    "date": "2026-08-05",
+    "venue": "Sligo",
+    "time": "18:00",
+    "file": "2026/08-05/sligo-1800.md",
+    "result": ""
+  },
+  {
+    "date": "2026-08-05",
+    "venue": "Sligo",
+    "time": "18:30",
+    "file": "2026/08-05/sligo-1830.md",
+    "result": ""
+  },
+  {
+    "date": "2026-08-05",
+    "venue": "Sligo",
+    "time": "19:00",
+    "file": "2026/08-05/sligo-1900.md",
+    "result": ""
+  },
+  {
+    "date": "2026-08-05",
+    "venue": "Sligo",
+    "time": "19:30",
+    "file": "2026/08-05/sligo-1930.md",
+    "result": ""
+  },
+  {
+    "date": "2026-08-05",
+    "venue": "Sligo",
+    "time": "20:00",
+    "file": "2026/08-05/sligo-2000.md",
+    "result": ""
+  },
+  {
+    "date": "2026-08-05",
+    "venue": "Sligo",
+    "time": "20:30",
+    "file": "2026/08-05/sligo-2030.md",
+    "result": ""
+  },
+  {
+    "date": "2026-08-05",
+    "venue": "Yarmouth",
+    "time": "17:40",
+    "file": "2026/08-05/yarmouth-1740.md",
+    "result": ""
+  },
+  {
+    "date": "2026-08-05",
+    "venue": "Yarmouth",
+    "time": "18:10",
+    "file": "2026/08-05/yarmouth-1810.md",
+    "result": ""
+  },
+  {
+    "date": "2026-08-05",
+    "venue": "Yarmouth",
+    "time": "18:40",
+    "file": "2026/08-05/yarmouth-1840.md",
+    "result": ""
+  },
+  {
+    "date": "2026-08-05",
+    "venue": "Yarmouth",
+    "time": "19:10",
+    "file": "2026/08-05/yarmouth-1910.md",
+    "result": ""
+  },
+  {
+    "date": "2026-08-05",
+    "venue": "Yarmouth",
+    "time": "19:40",
+    "file": "2026/08-05/yarmouth-1940.md",
+    "result": ""
+  },
+  {
+    "date": "2026-08-05",
+    "venue": "Yarmouth",
+    "time": "20:10",
+    "file": "2026/08-05/yarmouth-2010.md",
+    "result": ""
   }
 ]
