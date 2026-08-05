@@ -97,3 +97,37 @@ this note exists so the correct figures are visible on the record
 without altering the frozen entry files or `results.csv`. `starting_price`
 and `result` will still be filled in for these entries in the normal way
 once each race is run.
+
+---
+
+## 2026-08-05 — Three Yarmouth entries, same price capture failure (emergency correction exception — data integrity failure)
+
+**Entries affected:**
+- `horses/entries/2026/08-05/yarmouth-1840.md` (Dubai Charm)
+- `horses/entries/2026/08-05/yarmouth-1940.md` (Highland Harvey)
+- `horses/entries/2026/08-05/yarmouth-2010.md` (Banana)
+
+All three (unedited). `horses/results.csv` rows also unedited.
+
+**Issue:** same as the 5 August Sligo correction immediately above —
+each entry's Price section states no price was available in the source
+data at commitment. The operator has confirmed this was a capture
+failure for these three Yarmouth entries as well.
+
+**Correct position**, using the price at commitment supplied by the
+operator, pre-race:
+
+- **Dubai Charm** (Yarmouth 18:40): decimal price 3.25. Implied
+  probability 30.8%. Outside the 4/1–6/1 band. Not an each-way price
+  (below 6.00). Qualifies for action.
+- **Highland Harvey** (Yarmouth 19:40): decimal price 2.88. Implied
+  probability 34.7%. Outside the 4/1–6/1 band. Not an each-way price
+  (below 6.00). Qualifies for action — between 2.00 and 3.00, the
+  margin is thin.
+- **Banana** (Yarmouth 20:10): decimal price 3.00. Implied probability
+  33.3%. Outside the 4/1–6/1 band. Not an each-way price (below 6.00).
+  Qualifies for action — at exactly 3.00, the margin is thin.
+
+**Not corrected in place**, for the same reason as above:
+`price_at_commitment` is immutable once committed. `starting_price` and
+`result` will still be filled in normally once each race is run.
