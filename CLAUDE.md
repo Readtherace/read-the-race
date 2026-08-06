@@ -116,11 +116,23 @@ read-the-race/
    edit the entry file itself** — it stays exactly as committed pre-race,
    the frozen audit record. results.csv and manifest.json are the living
    overlay that carries what happened afterward: result, starting_price,
-   material_change, process_compliance_grade (see below), and nothing
-   else. This is completing fields deliberately left blank/default at
-   commitment, not editing the pre-race reasoning (selection, confidence,
-   price at commitment, principal risk) — that part of the row is
-   genuinely immutable.
+   material_change, process_compliance_grade (see below), going_allowance
+   for greyhounds (see 8a), and nothing else. This is completing fields
+   deliberately left blank/default at commitment, not editing the
+   pre-race reasoning (selection, confidence, price at commitment,
+   principal risk) — that part of the row is genuinely immutable.
+8a. **Greyhounds: capture the going allowance from the result once
+    published, if it wasn't available at commitment.** Track going
+    allowance (e.g. "Going: -20") is frequently only published alongside
+    the result, not on the pre-race card, so `going_allowance` in
+    `results.csv` is a living-overlay field like `result` and
+    `starting_price` — fill it in there once known. The entry file's
+    frontmatter is never touched, per point 8: it keeps whatever was
+    recorded (or "not stated") at commitment, since that reflects what
+    was actually known when the Stage 0 grid was worked. The value is
+    recorded for the permanent record only — never used to recompute
+    calculated times or revisit the entry's ranking, since those were
+    already fixed at commitment.
 9. **If a material change is discovered after commitment** but a full
    reopening isn't practical (missing details, or the change only
    surfaces well after the fact), record what's known in the CSV row's
