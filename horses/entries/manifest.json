@@ -327,5 +327,103 @@
     "time": "20:10",
     "file": "2026/08-05/yarmouth-2010.md",
     "result": "Unplaced"
+  },
+  {
+    "date": "2026-08-08",
+    "venue": "Haydock",
+    "time": "13:50",
+    "file": "2026/08-08/haydock-1350.md",
+    "result": ""
+  },
+  {
+    "date": "2026-08-08",
+    "venue": "Haydock",
+    "time": "14:25",
+    "file": "2026/08-08/haydock-1425.md",
+    "result": ""
+  },
+  {
+    "date": "2026-08-08",
+    "venue": "Haydock",
+    "time": "15:00",
+    "file": "2026/08-08/haydock-1500.md",
+    "result": ""
+  },
+  {
+    "date": "2026-08-08",
+    "venue": "Haydock",
+    "time": "15:34",
+    "file": "2026/08-08/haydock-1534.md",
+    "result": ""
+  },
+  {
+    "date": "2026-08-08",
+    "venue": "Haydock",
+    "time": "16:09",
+    "file": "2026/08-08/haydock-1609.md",
+    "result": ""
+  },
+  {
+    "date": "2026-08-08",
+    "venue": "Haydock",
+    "time": "16:40",
+    "file": "2026/08-08/haydock-1640.md",
+    "result": ""
+  },
+  {
+    "date": "2026-08-08",
+    "venue": "Haydock",
+    "time": "17:10",
+    "file": "2026/08-08/haydock-1710.md",
+    "result": ""
+  },
+  {
+    "date": "2026-08-08",
+    "venue": "Newmarket (July)",
+    "time": "13:55",
+    "file": "2026/08-08/newmarket-july-1355.md",
+    "result": ""
+  },
+  {
+    "date": "2026-08-08",
+    "venue": "Newmarket (July)",
+    "time": "14:30",
+    "file": "2026/08-08/newmarket-july-1430.md",
+    "result": ""
+  },
+  {
+    "date": "2026-08-08",
+    "venue": "Newmarket (July)",
+    "time": "15:05",
+    "file": "2026/08-08/newmarket-july-1505.md",
+    "result": ""
+  },
+  {
+    "date": "2026-08-08",
+    "venue": "Newmarket (July)",
+    "time": "15:40",
+    "file": "2026/08-08/newmarket-july-1540.md",
+    "result": ""
+  },
+  {
+    "date": "2026-08-08",
+    "venue": "Newmarket (July)",
+    "time": "16:14",
+    "file": "2026/08-08/newmarket-july-1614.md",
+    "result": ""
+  },
+  {
+    "date": "2026-08-08",
+    "venue": "Newmarket (July)",
+    "time": "16:50",
+    "file": "2026/08-08/newmarket-july-1650.md",
+    "result": ""
+  },
+  {
+    "date": "2026-08-08",
+    "venue": "Newmarket (July)",
+    "time": "17:23",
+    "file": "2026/08-08/newmarket-july-1723.md",
+    "result": ""
   }
 ]
