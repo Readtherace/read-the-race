@@ -425,5 +425,82 @@
     "time": "17:23",
     "file": "2026/08-08/newmarket-july-1723.md",
     "result": "2nd"
+  },
+  {
+    "date": "2026-08-09",
+    "venue": "Downpatrick",
+    "time": "14:33",
+    "file": "2026/08-09/downpatrick-1433.md",
+    "result": ""
+  },
+  {
+    "date": "2026-08-09",
+    "venue": "Downpatrick",
+    "time": "15:08",
+    "file": "2026/08-09/downpatrick-1508.md",
+    "result": ""
+  },
+  {
+    "date": "2026-08-09",
+    "venue": "Downpatrick",
+    "time": "15:43",
+    "file": "2026/08-09/downpatrick-1543.md",
+    "result": ""
+  },
+  {
+    "date": "2026-08-09",
+    "venue": "Downpatrick",
+    "time": "16:18",
+    "file": "2026/08-09/downpatrick-1618.md",
+    "result": ""
+  },
+  {
+    "date": "2026-08-09",
+    "venue": "Downpatrick",
+    "time": "16:53",
+    "file": "2026/08-09/downpatrick-1653.md",
+    "result": ""
+  },
+  {
+    "date": "2026-08-09",
+    "venue": "Downpatrick",
+    "time": "17:28",
+    "file": "2026/08-09/downpatrick-1728.md",
+    "result": ""
+  },
+  {
+    "date": "2026-08-09",
+    "venue": "Leicester",
+    "time": "14:59",
+    "file": "2026/08-09/leicester-1459.md",
+    "result": ""
+  },
+  {
+    "date": "2026-08-09",
+    "venue": "Leicester",
+    "time": "15:34",
+    "file": "2026/08-09/leicester-1534.md",
+    "result": ""
+  },
+  {
+    "date": "2026-08-09",
+    "venue": "Leicester",
+    "time": "16:09",
+    "file": "2026/08-09/leicester-1609.md",
+    "result": ""
+  },
+  {
+    "date": "2026-08-09",
+    "venue": "Leicester",
+    "time": "16:44",
+    "file": "2026/08-09/leicester-1644.md",
+    "result": ""
+  },
+  {
+    "date": "2026-08-09",
+    "venue": "Leicester",
+    "time": "17:19",
+    "file": "2026/08-09/leicester-1719.md",
+    "result": ""
   }
 ]
