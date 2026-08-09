@@ -67,13 +67,18 @@
 </footer>
 
 <script src="assets/js/csv.js"></script>
+<script src="assets/js/markdown.js"></script>
 <script src="assets/js/site.js"></script>
 <script>
   (async () => {
+    const corrections = await loadCorrections("CORRECTIONS.md");
+
     const horseRows = await loadCSVRows("horses/results.csv");
+    applyCorrections(horseRows, corrections);
     renderRunningRecordSummary(document.getElementById("horses-summary"), horseRows);
 
     const greyhoundRows = await loadCSVRows("greyhounds/results.csv");
+    applyCorrections(greyhoundRows, corrections);
     renderRunningRecordSummary(document.getElementById("greyhounds-summary"), greyhoundRows);
   })();
 </script>
