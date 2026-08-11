@@ -283,7 +283,7 @@ function raceTableHead(showTotalRunners) {
   <col class="col-time"><col class="col-selection"><col class="col-price"><col class="col-sp"><col class="col-ew"><col class="col-result">${showTotalRunners ? '<col class="col-runners">' : ""}<col class="col-conf">
 </colgroup>
 <thead><tr>
-  <th>Race Time</th><th>Selection</th><th>Price at publication</th><th>Starting Price</th><th>Each Way</th><th>Result</th>${showTotalRunners ? "<th>Total Runners</th>" : ""}<th>Confidence</th>
+  <th>Race Time</th><th>Selection</th><th><span class="header-line">Price at</span><span class="header-line">publication</span></th><th>Starting Price</th><th>Each Way</th><th>Result</th>${showTotalRunners ? '<th><span class="header-line">Total</span><span class="header-line">runners</span></th>' : ""}<th>Confidence</th>
 </tr></thead>`;
 }
 

@@ -6,6 +6,7 @@
   --bg-card: #fffcf5;
   --border: #d8cca9;
   --row-divider: #c4b58a;
+  --column-divider: #e2d9c1;
   --text: #2a2318;
   --text-dim: #5c5033;
   --text-faint: #6b5d3f;
@@ -309,12 +310,12 @@ col.col-result { width: 14%; }
 col.col-conf { width: 18%; }
 
 table.with-total-runners col.col-time { width: 8%; }
-table.with-total-runners col.col-selection { width: 21%; }
-table.with-total-runners col.col-price { width: 13%; }
+table.with-total-runners col.col-selection { width: 19%; }
+table.with-total-runners col.col-price { width: 14%; }
 table.with-total-runners col.col-sp { width: 12%; }
 table.with-total-runners col.col-ew { width: 8%; }
 table.with-total-runners col.col-result { width: 12%; }
-table.with-total-runners col.col-runners { width: 10%; }
+table.with-total-runners col.col-runners { width: 11%; }
 table.with-total-runners col.col-conf { width: 16%; }
 
 th, td {
@@ -347,6 +348,11 @@ th {
   overflow-wrap: break-word;
   word-break: break-word;
   line-height: 1.25;
+}
+
+th .header-line {
+  display: block;
+  white-space: nowrap;
 }
 
 tr:last-child td {
@@ -857,6 +863,11 @@ a.price-marker:hover {
 }
 
 @media (min-width: 640px) {
+  .table-scroll th:not(:last-child),
+  .table-scroll tr:not(.group-header-date):not(.group-header-course) td:not(:last-child) {
+    border-right: 1px solid var(--column-divider);
+  }
+
   body {
     font-size: 18px;
   }
