@@ -120,6 +120,12 @@ function effectivePriceBlock(item) {
   return Object.assign({ corrected: false }, raw);
 }
 
+/* A literal "No clear selection" record is not a named runner. */
+function hasNamedSelection(row) {
+  const selection = (row.selection || "").trim().toLowerCase();
+  return !!selection && selection !== "no clear selection";
+}
+
 /*
  * Whether an entry qualifies for action under the Stage 5 price policy:
  * a selection was named AND the recorded (or corrected) price is 2.00 or
@@ -127,9 +133,8 @@ function effectivePriceBlock(item) {
  * qualification is decided at commitment, not at settlement.
  */
 function qualifiesForAction(row) {
-  const hasSelection = !!(row.selection && row.selection.trim());
   const pb = effectivePriceBlock(row);
-  return hasSelection && pb.qualifies === true;
+  return hasNamedSelection(row) && pb.qualifies === true;
 }
 
 /* True when a row has a named selection but genuinely no price on record
@@ -137,8 +142,7 @@ function qualifiesForAction(row) {
  * data gap, not a Stage 5 rule outcome, and must never be labelled or
  * counted as "no qualifying action". */
 function isPriceUnrecorded(row) {
-  const hasSelection = !!(row.selection && row.selection.trim());
-  return hasSelection && effectivePriceBlock(row).price === null;
+  return hasNamedSelection(row) && effectivePriceBlock(row).price === null;
 }
 
 /* Extracts the race off-time from entry_id's YYYYMMDD-<slug>-HHMM suffix. */
@@ -208,7 +212,7 @@ function formatStartingPrice(str) {
 }
 
 /* One race row: time, selection, price at publication, starting price, each
- * way, result, confidence. Date and venue are conveyed by the group header
+ * way, result, total runners, confidence. Date and venue are conveyed by the group header
  * above, not repeated here. Starting price is a separate field from price at
  * publication (price_at_commitment internally) — it's only populated once a
  * result is known, and never overwrites the publication price. Each cell
@@ -226,7 +230,7 @@ function correctionFootnoteHtml(rows) {
 /* Assumes it's always rendered from a page one level below repo root
  * (horses/index.html, greyhounds/index.html) — the corrections.html link
  * below is relative to that. Update if raceRowHtml grows other callers. */
-function raceRowHtml(r) {
+function raceRowHtml(r, showTotalRunners) {
   const raceTime = raceTimeFromEntryId(r.entry_id);
   const pb = effectivePriceBlock(r);
   const qualifies = qualifiesForAction(r);
@@ -265,6 +269,7 @@ function raceRowHtml(r) {
     <td class="price-cell" data-label="Starting Price">${sp !== null ? sp : "—"}</td>
     <td data-label="Each Way">${eachWay}</td>
     <td class="${resultClass(r.result)}" data-label="Result">${mdEscape(r.result || "pending")}</td>
+    ${showTotalRunners ? `<td data-label="Total Runners">${mdEscape(r.total_runners || "—")}</td>` : ""}
     <td data-label="Confidence">${mdEscape(r.confidence || "")}</td>
   </tr>`;
 }
@@ -273,12 +278,14 @@ function raceRowHtml(r) {
  * only variable-length prose) without dominating the row; the four numeric/
  * short-text columns stay narrow. Only affects the desktop table — the
  * mobile stacked-card layout (see style.css) ignores colgroup widths. */
-const RACE_TABLE_HEAD = `<colgroup>
-  <col class="col-time"><col class="col-selection"><col class="col-price"><col class="col-sp"><col class="col-ew"><col class="col-result"><col class="col-conf">
+function raceTableHead(showTotalRunners) {
+  return `<colgroup>
+  <col class="col-time"><col class="col-selection"><col class="col-price"><col class="col-sp"><col class="col-ew"><col class="col-result">${showTotalRunners ? '<col class="col-runners">' : ""}<col class="col-conf">
 </colgroup>
 <thead><tr>
-  <th>Race Time</th><th>Selection</th><th>Price at publication</th><th>Starting Price</th><th>Each Way</th><th>Result</th><th>Confidence</th>
+  <th>Race Time</th><th>Selection</th><th>Price at publication</th><th>Starting Price</th><th>Each Way</th><th>Result</th>${showTotalRunners ? "<th>Total Runners</th>" : ""}<th>Confidence</th>
 </tr></thead>`;
+}
 
 /* Renders the stat-tile summary for one sport's results.csv rows. */
 function renderStats(el, rows) {
@@ -336,6 +343,7 @@ function renderStats(el, rows) {
 function renderTodayTable(el, rows, venueKey) {
   const today = todayIso();
   const todayRows = rows.filter((r) => r.date === today && classifyResult(r.result) === "pending");
+  const showTotalRunners = venueKey === "course";
 
   if (!todayRows.length) {
     el.innerHTML = '<div class="empty-state">No races entered for today yet.</div>';
@@ -344,14 +352,14 @@ function renderTodayTable(el, rows, venueKey) {
 
   const venues = groupByVenueSorted(todayRows, venueKey);
   const body = venues.map((v) =>
-    `<tr class="group-header-course"><td colspan="7">${mdEscape(v.venue)}</td></tr>` +
-    v.rows.map(raceRowHtml).join("")
+    `<tr class="group-header-course"><td colspan="${showTotalRunners ? 8 : 7}">${mdEscape(v.venue)}</td></tr>` +
+    v.rows.map((r) => raceRowHtml(r, showTotalRunners)).join("")
   ).join("");
 
   el.innerHTML = `
     <div class="table-scroll">
-      <table>
-        ${RACE_TABLE_HEAD}
+      <table class="${showTotalRunners ? "with-total-runners" : ""}">
+        ${raceTableHead(showTotalRunners)}
         <tbody>${body}</tbody>
       </table>
     </div>
@@ -367,6 +375,7 @@ function renderTodayTable(el, rows, venueKey) {
 function renderResultedTable(el, rows, venueKey) {
   const today = todayIso();
   const resultedRows = rows.filter((r) => !(r.date === today && classifyResult(r.result) === "pending"));
+  const showTotalRunners = venueKey === "course";
 
   if (!resultedRows.length) {
     el.innerHTML = '<div class="empty-state">No results recorded yet.</div>';
@@ -375,18 +384,18 @@ function renderResultedTable(el, rows, venueKey) {
 
   const dateGroups = groupByDateThenVenue(resultedRows, venueKey);
   const body = dateGroups.map((dg) => {
-    const dateHeader = `<tr class="group-header-date"><td colspan="7">${formatDateUK(dg.date)}</td></tr>`;
+    const dateHeader = `<tr class="group-header-date"><td colspan="${showTotalRunners ? 8 : 7}">${formatDateUK(dg.date)}</td></tr>`;
     const venueRows = dg.venues.map((v) =>
-      `<tr class="group-header-course"><td colspan="7">${mdEscape(v.venue)}</td></tr>` +
-      v.rows.map(raceRowHtml).join("")
+      `<tr class="group-header-course"><td colspan="${showTotalRunners ? 8 : 7}">${mdEscape(v.venue)}</td></tr>` +
+      v.rows.map((r) => raceRowHtml(r, showTotalRunners)).join("")
     ).join("");
     return dateHeader + venueRows;
   }).join("");
 
   el.innerHTML = `
     <div class="table-scroll">
-      <table>
-        ${RACE_TABLE_HEAD}
+      <table class="${showTotalRunners ? "with-total-runners" : ""}">
+        ${raceTableHead(showTotalRunners)}
         <tbody>${body}</tbody>
       </table>
     </div>

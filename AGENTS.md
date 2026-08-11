@@ -53,7 +53,7 @@ the framework file is authoritative.
 
 ```
 read-the-race/
-  CLAUDE.md                          this file
+  AGENTS.md                          this file
   README.md                          public explanation of the method
   index.html                         site home: both running records, links in
   assets/css/style.css               shared dark, mobile-first stylesheet

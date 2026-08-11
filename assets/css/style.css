@@ -308,6 +308,15 @@ col.col-ew { width: 9%; }
 col.col-result { width: 14%; }
 col.col-conf { width: 18%; }
 
+table.with-total-runners col.col-time { width: 8%; }
+table.with-total-runners col.col-selection { width: 21%; }
+table.with-total-runners col.col-price { width: 13%; }
+table.with-total-runners col.col-sp { width: 12%; }
+table.with-total-runners col.col-ew { width: 8%; }
+table.with-total-runners col.col-result { width: 12%; }
+table.with-total-runners col.col-runners { width: 10%; }
+table.with-total-runners col.col-conf { width: 16%; }
+
 th, td {
   text-align: left;
   padding: 12px 8px;
