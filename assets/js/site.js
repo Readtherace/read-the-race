@@ -243,7 +243,7 @@ function raceRowHtml(r, showTotalRunners) {
   const pb = effectivePriceBlock(r);
   const qualifies = qualifiesForAction(r);
   const unrecorded = isPriceUnrecorded(r);
-  const eachWay = pb.price !== null ? (pb.eachWayEligible ? "Yes" : "No") : "—";
+  const eachWayPriceTest = pb.price !== null ? (pb.eachWayEligible ? "Met" : "Not met") : "—";
   const sp = formatStartingPrice(r.starting_price);
 
   const viewerHref = entryViewerHref(r);
@@ -280,7 +280,7 @@ function raceRowHtml(r, showTotalRunners) {
     <td class="selection-cell" data-label="Selection">${selectionHtml}</td>
     <td class="price-cell" data-label="Price at publication">${priceHtml}</td>
     <td class="price-cell" data-label="Starting Price">${sp !== null ? sp : "—"}</td>
-    <td data-label="6.00+ threshold">${eachWay}</td>
+    <td data-label="Each-way price test">${eachWayPriceTest}</td>
     <td class="${resultClass(r.result)}" data-label="Result">${mdEscape(r.result || "pending")}</td>
     ${showTotalRunners ? `<td data-label="Total Runners">${mdEscape(r.total_runners || "—")}</td>` : ""}
     <td data-label="Confidence">${mdEscape(r.confidence || "")}</td>
@@ -297,8 +297,12 @@ function raceTableHead(showTotalRunners, caption) {
 </colgroup>
 <caption class="sr-only">${mdEscape(caption || "Race record")}</caption>
 <thead><tr>
-  <th scope="col">Race Time</th><th scope="col">Selection</th><th scope="col"><span class="header-line">Price at</span><span class="header-line">publication</span></th><th scope="col">Starting Price</th><th scope="col"><span class="header-line">6.00+</span><span class="header-line">threshold</span></th><th scope="col">Result</th>${showTotalRunners ? '<th scope="col"><span class="header-line">Total</span><span class="header-line">runners</span></th>' : ""}<th scope="col">Confidence</th>
+  <th scope="col">Race Time</th><th scope="col">Selection</th><th scope="col"><span class="header-line">Price at</span><span class="header-line">publication</span></th><th scope="col">Starting Price</th><th scope="col"><span class="header-line">Each-way</span><span class="header-line">price test</span></th><th scope="col">Result</th>${showTotalRunners ? '<th scope="col"><span class="header-line">Total</span><span class="header-line">runners</span></th>' : ""}<th scope="col">Confidence</th>
 </tr></thead>`;
+}
+
+function eachWayPriceFootnoteHtml() {
+  return '<p class="table-footnote">“Met” means the publication price was 6.00 or higher, which opens each-way consideration. Price alone does not make a selection an each-way case; field size, place terms and a credible placing chance must also be suitable.</p>';
 }
 
 /* Renders the stat-tile summary for one sport's results.csv rows. */
@@ -459,6 +463,7 @@ function renderTodayTable(el, rows, venueKey) {
         <tbody>${body}</tbody>
       </table>
     </div>
+    ${eachWayPriceFootnoteHtml()}
     ${correctionFootnoteHtml(todayRows)}`;
 }
 
@@ -497,6 +502,7 @@ function renderResultedTable(el, rows, venueKey, filters) {
         <tbody>${body}</tbody>
       </table>
     </div>
+    ${eachWayPriceFootnoteHtml()}
     ${correctionFootnoteHtml(resultedRows)}`;
 }
 
