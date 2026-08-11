@@ -52,12 +52,16 @@
     const params = new URLSearchParams(window.location.search);
     const file = params.get("file");
     const root = document.getElementById("entry-root");
-    if (!file) {
+    if (!file || !/^\d{4}\/\d{2}-\d{2}\/[a-z0-9-]+\.md$/.test(file)) {
       root.innerHTML = '<div class="empty-state">No entry specified.</div>';
       return;
     }
-    const corrections = await loadCorrections("../CORRECTIONS.md");
-    loadEntryInto(root, `entries/${file}`, "track", { corrections });
+    const [corrections, rows] = await Promise.all([
+      loadCorrections("../CORRECTIONS.md"),
+      loadCSVRows("results.csv"),
+    ]);
+    const overlay = rows.find((row) => row.entry_file === `greyhounds/entries/${file}`);
+    await loadEntryInto(root, `entries/${file}`, "track", { corrections, overlay });
   })();
 </script>
 

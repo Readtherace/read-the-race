@@ -227,6 +227,14 @@ function correctionFootnoteHtml(rows) {
   return '<p class="table-footnote">† price recorded via logged correction, see <a href="../corrections.html">CORRECTIONS.md</a>.</p>';
 }
 
+/* Builds a link from a CSV entry_file path to the sport's entry viewer.
+ * Both sport index pages sit alongside entry.html, so only the path below
+ * horses/entries or greyhounds/entries belongs in the query string. */
+function entryViewerHref(row) {
+  const file = (row.entry_file || "").replace(/^(horses|greyhounds)\/entries\//, "");
+  return file ? `entry.html?file=${encodeURIComponent(file)}` : "";
+}
+
 /* Assumes it's always rendered from a page one level below repo root
  * (horses/index.html, greyhounds/index.html) — the corrections.html link
  * below is relative to that. Update if raceRowHtml grows other callers. */
@@ -238,13 +246,18 @@ function raceRowHtml(r, showTotalRunners) {
   const eachWay = pb.price !== null ? (pb.eachWayEligible ? "Yes" : "No") : "—";
   const sp = formatStartingPrice(r.starting_price);
 
+  const viewerHref = entryViewerHref(r);
+  const selectionName = mdEscape(r.selection || "");
+  const linkedSelection = viewerHref
+    ? `<a class="entry-row-link" href="${viewerHref}">${selectionName}</a>`
+    : selectionName;
   let selectionHtml;
   if (qualifies) {
-    selectionHtml = mdEscape(r.selection || "");
+    selectionHtml = linkedSelection;
   } else if (unrecorded) {
-    selectionHtml = mdEscape(r.selection || "");
+    selectionHtml = linkedSelection;
   } else {
-    selectionHtml = `<span class="no-action-label">No qualifying action</span><span class="no-action-runner">${mdEscape(r.selection || "")}</span>`;
+    selectionHtml = `<span class="no-action-label">No qualifying action</span><span class="no-action-runner">${linkedSelection}</span>`;
   }
 
   // The marker slot is always emitted, empty when there's no correction,
@@ -267,7 +280,7 @@ function raceRowHtml(r, showTotalRunners) {
     <td class="selection-cell" data-label="Selection">${selectionHtml}</td>
     <td class="price-cell" data-label="Price at publication">${priceHtml}</td>
     <td class="price-cell" data-label="Starting Price">${sp !== null ? sp : "—"}</td>
-    <td data-label="Each Way">${eachWay}</td>
+    <td data-label="6.00+ threshold">${eachWay}</td>
     <td class="${resultClass(r.result)}" data-label="Result">${mdEscape(r.result || "pending")}</td>
     ${showTotalRunners ? `<td data-label="Total Runners">${mdEscape(r.total_runners || "—")}</td>` : ""}
     <td data-label="Confidence">${mdEscape(r.confidence || "")}</td>
@@ -278,12 +291,13 @@ function raceRowHtml(r, showTotalRunners) {
  * only variable-length prose) without dominating the row; the four numeric/
  * short-text columns stay narrow. Only affects the desktop table — the
  * mobile stacked-card layout (see style.css) ignores colgroup widths. */
-function raceTableHead(showTotalRunners) {
+function raceTableHead(showTotalRunners, caption) {
   return `<colgroup>
   <col class="col-time"><col class="col-selection"><col class="col-price"><col class="col-sp"><col class="col-ew"><col class="col-result">${showTotalRunners ? '<col class="col-runners">' : ""}<col class="col-conf">
 </colgroup>
+<caption class="sr-only">${mdEscape(caption || "Race record")}</caption>
 <thead><tr>
-  <th>Race Time</th><th>Selection</th><th><span class="header-line">Price at</span><span class="header-line">publication</span></th><th>Starting Price</th><th>Each Way</th><th>Result</th>${showTotalRunners ? '<th><span class="header-line">Total</span><span class="header-line">runners</span></th>' : ""}<th>Confidence</th>
+  <th scope="col">Race Time</th><th scope="col">Selection</th><th scope="col"><span class="header-line">Price at</span><span class="header-line">publication</span></th><th scope="col">Starting Price</th><th scope="col"><span class="header-line">6.00+</span><span class="header-line">threshold</span></th><th scope="col">Result</th>${showTotalRunners ? '<th scope="col"><span class="header-line">Total</span><span class="header-line">runners</span></th>' : ""}<th scope="col">Confidence</th>
 </tr></thead>`;
 }
 
@@ -297,10 +311,21 @@ function renderStats(el, rows) {
   let wins = 0;
   let decided = 0;
   let qualifying = 0;
-  let noAction = 0;
+  let pendingQualifying = 0;
+  let belowThreshold = 0;
+  let noSelection = 0;
+  let voids = 0;
   let unrecorded = 0;
+  let complianceReviewed = 0;
+  let namedSelections = 0;
 
   rows.forEach((r) => {
+    if ((r.process_compliance_grade || "").trim()) complianceReviewed++;
+    if (!hasNamedSelection(r)) {
+      noSelection++;
+      return;
+    }
+    namedSelections++;
     if (isPriceUnrecorded(r)) {
       unrecorded++;
       return;
@@ -310,8 +335,10 @@ function renderStats(el, rows) {
       const k = classifyResult(r.result);
       if (k === "win") { wins++; decided++; }
       else if (k === "lose") { decided++; }
+      else if (k === "pending") { pendingQualifying++; }
+      else if (k === "void") { voids++; }
     } else {
-      noAction++;
+      belowThreshold++;
     }
   });
 
@@ -324,14 +351,83 @@ function renderStats(el, rows) {
     ? `<div class="stat-tile"><div class="value">${unrecorded}</div><div class="label">Price not recorded</div></div>`
     : "";
 
+  const reviewCount = Math.min(namedSelections, 100);
+  const reviewPct = Math.min(100, reviewCount);
+
   el.innerHTML = `
     <div class="stat-row">
       <div class="stat-tile"><div class="value">${rows.length}</div><div class="label">Entries</div></div>
-      <div class="stat-tile"><div class="value">${qualifying}</div><div class="label">Qualifying</div></div>
-      <div class="stat-tile"><div class="value">${strikeRateText}</div><div class="label">Strike rate</div></div>
-      <div class="stat-tile"><div class="value">${noAction}</div><div class="label">No action</div></div>
+      <div class="stat-tile"><div class="value">${qualifying}</div><div class="label">Qualifying entries</div></div>
+      <div class="stat-tile"><div class="value">${strikeRateText}</div><div class="label">Qualifying strike rate</div></div>
+      <div class="stat-tile"><div class="value">${decided}</div><div class="label">Settled qualifying</div></div>
+      <div class="stat-tile"><div class="value">${pendingQualifying}</div><div class="label">Pending qualifying</div></div>
+      <div class="stat-tile"><div class="value">${voids}</div><div class="label">Void / NR</div></div>
+      <div class="stat-tile"><div class="value">${belowThreshold}</div><div class="label">Below 2.00</div></div>
+      <div class="stat-tile"><div class="value">${noSelection}</div><div class="label">No clear selection</div></div>
+      <div class="stat-tile"><div class="value">${complianceReviewed}/${rows.length}</div><div class="label">Compliance reviewed</div></div>
       ${unrecordedTile}
+    </div>
+    <div class="review-progress" aria-label="${reviewCount} of 100 named selections recorded before the scheduled framework review">
+      <div class="review-progress-copy"><strong>Scheduled review progress</strong><span>${reviewCount}/100 named selections</span></div>
+      <div class="review-progress-track" aria-hidden="true"><span style="width:${reviewPct}%"></span></div>
+      <p>The predictive rules remain locked until the scheduled review point.</p>
     </div>`;
+}
+
+function resultFilterKey(row) {
+  const result = (row.result || "").trim().toLowerCase();
+  const kind = classifyResult(result);
+  if (kind === "pending") return "pending";
+  if (kind === "win") return "won";
+  if (kind === "void") return "void";
+  if (kind === "no-action") return "no-selection";
+  if (/^(pu|f|ur|rr|ro|bd|co)\b/.test(result)) return "dnf";
+  return "finished";
+}
+
+function filterRecordRows(rows, venueKey, filters) {
+  const search = (filters.search || "").trim().toLowerCase();
+  return rows.filter((row) => {
+    if (filters.date && row.date !== filters.date) return false;
+    if (filters.venue && row[venueKey] !== filters.venue) return false;
+    if (filters.confidence && (row.confidence || "").toLowerCase() !== filters.confidence) return false;
+    if (filters.result && resultFilterKey(row) !== filters.result) return false;
+    if (filters.qualification === "qualifying" && !qualifiesForAction(row)) return false;
+    if (filters.qualification === "no-action" && (qualifiesForAction(row) || isPriceUnrecorded(row))) return false;
+    if (filters.qualification === "unrecorded" && !isPriceUnrecorded(row)) return false;
+    if (search) {
+      const haystack = [row.selection, row[venueKey], row.date, row.result].join(" ").toLowerCase();
+      if (!haystack.includes(search)) return false;
+    }
+    return true;
+  });
+}
+
+function renderRecordFilters(el, rows, venueKey, onChange) {
+  const dates = [...new Set(rows.map((r) => r.date).filter(Boolean))].sort((a, b) => b.localeCompare(a));
+  const venues = [...new Set(rows.map((r) => r[venueKey]).filter(Boolean))].sort();
+  const venueLabel = venueKey === "course" ? "Course" : "Track";
+
+  el.innerHTML = `
+    <form class="record-filters" aria-label="Filter resulted entries">
+      <label>Search<input type="search" name="search" placeholder="Selection or ${venueLabel.toLowerCase()}" autocomplete="off"></label>
+      <label>Date<select name="date"><option value="">All dates</option>${dates.map((d) => `<option value="${mdEscape(d)}">${mdEscape(formatDateUK(d))}</option>`).join("")}</select></label>
+      <label>${venueLabel}<select name="venue"><option value="">All ${venueLabel.toLowerCase()}s</option>${venues.map((v) => `<option value="${mdEscape(v)}">${mdEscape(v)}</option>`).join("")}</select></label>
+      <label>Confidence<select name="confidence"><option value="">All levels</option><option value="high">High</option><option value="medium">Medium</option><option value="low">Low</option></select></label>
+      <label>Result<select name="result"><option value="">All results</option><option value="won">Won</option><option value="finished">Finished, non-win</option><option value="dnf">Did not finish</option><option value="void">NR / void</option><option value="pending">Pending</option><option value="no-selection">No clear selection</option></select></label>
+      <label>Price policy<select name="qualification"><option value="">All entries</option><option value="qualifying">Qualifying</option><option value="no-action">No qualifying action</option><option value="unrecorded">Price not recorded</option></select></label>
+      <button type="reset" class="filter-reset">Clear filters</button>
+    </form>`;
+
+  const form = el.querySelector("form");
+  const emit = () => {
+    const values = Object.fromEntries(new FormData(form).entries());
+    onChange(values);
+  };
+  form.addEventListener("input", emit);
+  form.addEventListener("change", emit);
+  form.addEventListener("reset", () => setTimeout(emit, 0));
+  emit();
 }
 
 /*
@@ -352,14 +448,14 @@ function renderTodayTable(el, rows, venueKey) {
 
   const venues = groupByVenueSorted(todayRows, venueKey);
   const body = venues.map((v) =>
-    `<tr class="group-header-course"><td colspan="${showTotalRunners ? 8 : 7}">${mdEscape(v.venue)}</td></tr>` +
+    `<tr class="group-header-course"><th scope="rowgroup" colspan="${showTotalRunners ? 8 : 7}">${mdEscape(v.venue)}</th></tr>` +
     v.rows.map((r) => raceRowHtml(r, showTotalRunners)).join("")
   ).join("");
 
   el.innerHTML = `
     <div class="table-scroll">
       <table class="${showTotalRunners ? "with-total-runners" : ""}">
-        ${raceTableHead(showTotalRunners)}
+        ${raceTableHead(showTotalRunners, "Today's recorded races")}
         <tbody>${body}</tbody>
       </table>
     </div>
@@ -372,30 +468,32 @@ function renderTodayTable(el, rows, venueKey) {
  * Grouped by date (most recent first), then by venue within each date,
  * same earliest-first sort as Today.
  */
-function renderResultedTable(el, rows, venueKey) {
+function renderResultedTable(el, rows, venueKey, filters) {
   const today = todayIso();
-  const resultedRows = rows.filter((r) => !(r.date === today && classifyResult(r.result) === "pending"));
+  const baseRows = rows.filter((r) => !(r.date === today && classifyResult(r.result) === "pending"));
+  const resultedRows = filterRecordRows(baseRows, venueKey, filters || {});
   const showTotalRunners = venueKey === "course";
 
   if (!resultedRows.length) {
-    el.innerHTML = '<div class="empty-state">No results recorded yet.</div>';
+    el.innerHTML = '<div class="empty-state">No entries match these filters.</div>';
     return;
   }
 
   const dateGroups = groupByDateThenVenue(resultedRows, venueKey);
   const body = dateGroups.map((dg) => {
-    const dateHeader = `<tr class="group-header-date"><td colspan="${showTotalRunners ? 8 : 7}">${formatDateUK(dg.date)}</td></tr>`;
+    const dateHeader = `<tr class="group-header-date"><th scope="rowgroup" colspan="${showTotalRunners ? 8 : 7}">${formatDateUK(dg.date)}</th></tr>`;
     const venueRows = dg.venues.map((v) =>
-      `<tr class="group-header-course"><td colspan="${showTotalRunners ? 8 : 7}">${mdEscape(v.venue)}</td></tr>` +
+      `<tr class="group-header-course"><th scope="rowgroup" colspan="${showTotalRunners ? 8 : 7}">${mdEscape(v.venue)}</th></tr>` +
       v.rows.map((r) => raceRowHtml(r, showTotalRunners)).join("")
     ).join("");
     return dateHeader + venueRows;
   }).join("");
 
   el.innerHTML = `
+    <p class="filter-summary" role="status">Showing ${resultedRows.length} of ${baseRows.length} entries.</p>
     <div class="table-scroll">
       <table class="${showTotalRunners ? "with-total-runners" : ""}">
-        ${raceTableHead(showTotalRunners)}
+        ${raceTableHead(showTotalRunners, "Resulted and historical recorded races")}
         <tbody>${body}</tbody>
       </table>
     </div>
@@ -422,7 +520,7 @@ function renderRunningRecordSummary(el, rows) {
   el.innerHTML = `
     <div class="stat-row">
       <div class="stat-tile"><div class="value">${rows.length}</div><div class="label">Entries</div></div>
-      <div class="stat-tile"><div class="value">${strikeRateText}</div><div class="label">Strike rate</div></div>
+      <div class="stat-tile"><div class="value">${strikeRateText}</div><div class="label">Qualifying strike rate</div></div>
     </div>`;
 }
 
@@ -469,7 +567,7 @@ function renderFormStrip(el, rows) {
       label = "void";
     }
     const title = `${r.selection || "—"} — ${label} (${formatDateUK(r.date)})`;
-    return `<span class="form-square ${cls}" title="${mdEscape(title)}"></span>`;
+    return `<span class="form-square ${cls}" role="img" aria-label="${mdEscape(title)}" title="${mdEscape(title)}"></span>`;
   }).join("");
 
   const sampleNote = last20.length < 10
@@ -478,13 +576,13 @@ function renderFormStrip(el, rows) {
 
   el.innerHTML = `
     <div class="form-strip">
-      <div class="form-strip-row">${squares}</div>
+      <div class="form-strip-row" aria-label="Recent form, oldest to most recent">${squares}</div>
       <p class="form-strip-caption">${mdEscape(sampleNote)}</p>
       <div class="form-strip-legend">
-        <span><span class="form-square form-win"></span>Won</span>
-        <span><span class="form-square form-lose"></span>Lost</span>
-        <span><span class="form-square form-no-action"></span>No qualifying action</span>
-        <span><span class="form-square form-unrecorded"></span>Price not recorded</span>
+        <span><span class="form-square form-win" aria-hidden="true"></span>Won</span>
+        <span><span class="form-square form-lose" aria-hidden="true"></span>Lost</span>
+        <span><span class="form-square form-no-action" aria-hidden="true"></span>No qualifying action</span>
+        <span><span class="form-square form-unrecorded" aria-hidden="true"></span>Price not recorded</span>
       </div>
     </div>`;
 }
@@ -504,7 +602,7 @@ function renderBarChart(el, title, subtitle, buckets) {
         <div class="bar-row-label">${mdEscape(b.label)}</div>
         <div>
           <div class="bar-row-track-wrap">
-            <div class="bar-track"><div class="bar-fill" style="width:${b.decided > 0 ? pct : 0}%"></div></div>
+            <div class="bar-track" aria-hidden="true"><div class="bar-fill" style="width:${b.decided > 0 ? pct : 0}%"></div></div>
             <div class="bar-row-value">${valueText}</div>
           </div>
           ${note}
@@ -513,7 +611,7 @@ function renderBarChart(el, title, subtitle, buckets) {
   }).join("");
 
   el.innerHTML = `
-    <div class="bar-chart">
+    <div class="bar-chart" role="group" aria-label="${mdEscape(title)}. ${mdEscape(subtitle)}">
       <p class="bar-chart-title">${mdEscape(title)}</p>
       <p class="bar-chart-subtitle">${mdEscape(subtitle)}</p>
       ${rowsHtml}
@@ -651,6 +749,22 @@ function computePriceBlock(priceStr) {
   };
 }
 
+/* Applies only the fields governance permits to change after commitment.
+ * The pre-race reasoning, selection, confidence, publication price and
+ * principal risk continue to come exclusively from the frozen Markdown. */
+function mergeResultOverlay(frontmatter, overlay) {
+  if (!overlay) return frontmatter;
+  const allowed = [
+    "starting_price", "result", "material_change", "process_compliance_grade",
+    "operator_disagreement", "total_runners", "going_allowance",
+  ];
+  allowed.forEach((key) => {
+    if (Object.prototype.hasOwnProperty.call(overlay, key)) frontmatter[key] = overlay[key];
+  });
+  frontmatter._overlayApplied = true;
+  return frontmatter;
+}
+
 /* Renders the compact verdict card + collapsible full analysis for one entry. */
 function renderEntry(el, frontmatter, body, venueKey) {
   const selection = frontmatter.selection || "";
@@ -660,6 +774,12 @@ function renderEntry(el, frontmatter, body, venueKey) {
   const pb = effectivePriceBlock(frontmatter);
   const raceTime = raceTimeFromEntryId(frontmatter.entry_id);
   const sp = formatStartingPrice(frontmatter.starting_price);
+  const resultText = (frontmatter.result || "").trim() || "Pending";
+  const compliance = (frontmatter.process_compliance_grade || "").trim() || "Not yet reviewed";
+  const totalRunners = (frontmatter.total_runners || "").trim();
+  const goingAllowance = venueKey === "track" ? (frontmatter.going_allowance || "").trim() : "";
+  const materialChange = (frontmatter.material_change || "").trim();
+  const operatorDisagreement = (frontmatter.operator_disagreement || "").trim();
 
   let qualifiesText;
   if (!selection) {
@@ -680,9 +800,32 @@ function renderEntry(el, frontmatter, body, venueKey) {
     : "";
 
   const metaBits = [venue, formatDateUK(frontmatter.date), raceTime].filter(Boolean);
+  const overlayContextTile = totalRunners
+    ? `<div class="stat-tile"><div class="value">${mdEscape(totalRunners)}</div><div class="label">Total runners</div></div>`
+    : goingAllowance
+      ? `<div class="stat-tile"><div class="value">${mdEscape(goingAllowance)}</div><div class="label">Going allowance</div></div>`
+      : "";
+  const materialChangeHtml = materialChange && materialChange.toLowerCase() !== "no"
+    ? `<p><strong>Material-change record:</strong> ${mdEscape(materialChange)}</p>`
+    : "";
+  const disagreementHtml = operatorDisagreement && !/^none\b/i.test(operatorDisagreement)
+    ? `<p><strong>Operator disagreement:</strong> ${mdEscape(operatorDisagreement)}</p>`
+    : "";
+  const resultOverlayHtml = frontmatter._overlayApplied ? `
+    <section class="result-overlay" aria-labelledby="result-overlay-title">
+      <div class="overlay-heading"><h2 id="result-overlay-title">Result information</h2><span>Added after the race</span></div>
+      <div class="stat-row">
+        <div class="stat-tile"><div class="value ${resultClass(resultText)}">${mdEscape(resultText)}</div><div class="label">Result</div></div>
+        <div class="stat-tile"><div class="value">${sp !== null ? sp : "—"}</div><div class="label">Starting price</div></div>
+        ${overlayContextTile}
+        <div class="stat-tile"><div class="value">${mdEscape(compliance)}</div><div class="label">Process compliance</div></div>
+      </div>
+      ${materialChangeHtml}${disagreementHtml}
+    </section>` : "";
 
   const cardHtml = `
     <div class="card verdict-card">
+      <p class="record-phase">Frozen pre-race record${frontmatter.time_of_commitment ? ` · committed ${mdEscape(frontmatter.time_of_commitment)}` : ""}</p>
       <div class="verdict-header">
         <h1>${mdEscape(selection || "No clear selection")}</h1>
         ${confidence ? `<span class="confidence-badge confidence-${mdEscape(confidenceKey)}">${mdEscape(confidence)}</span>` : ""}
@@ -690,16 +833,15 @@ function renderEntry(el, frontmatter, body, venueKey) {
       <p class="verdict-meta">${metaBits.map(mdEscape).join(" · ")}</p>
       <div class="stat-row">
         <div class="stat-tile"><div class="value">${priceValue}</div><div class="label">Price at publication</div></div>
-        <div class="stat-tile"><div class="value">${sp !== null ? sp : "—"}</div><div class="label">Starting price</div></div>
         <div class="stat-tile"><div class="value">${pb.impliedProbability !== null ? pb.impliedProbability + "%" : "—"}</div><div class="label">Implied probability</div></div>
         <div class="stat-tile"><div class="value">${mdEscape(qualifiesText)}</div><div class="label">Qualifies for action</div></div>
       </div>
       ${correctionFootnote}
-      ${frontmatter.result ? `<p class="verdict-result ${resultClass(frontmatter.result)}">Result: ${mdEscape(frontmatter.result)}</p>` : ""}
       ${frontmatter.principal_risk ? `<p class="principal-risk"><strong>Principal risk:</strong> ${mdEscape(frontmatter.principal_risk)}</p>` : ""}
     </div>
+    ${resultOverlayHtml}
     <details class="framework-details">
-      <summary>Show full framework working</summary>
+      <summary>Show frozen pre-race framework working</summary>
       <div class="prose">${renderMarkdown(body)}</div>
     </details>`;
 
@@ -716,6 +858,9 @@ async function loadEntryInto(el, mdUrl, venueKey, opts) {
     return;
   }
   const { data, body } = parseFrontmatter(text);
+  if (opts && opts.overlay) {
+    mergeResultOverlay(data, opts.overlay);
+  }
   if (opts && opts.corrections) {
     applyCorrections([data], opts.corrections);
   }

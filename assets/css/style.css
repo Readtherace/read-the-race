@@ -24,6 +24,18 @@
   box-sizing: border-box;
 }
 
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 html {
   -webkit-text-size-adjust: 100%;
 }
@@ -279,6 +291,46 @@ pre code {
   margin-top: 2px;
 }
 
+.review-progress {
+  margin-top: 14px;
+  padding: 14px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.review-progress-copy {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 0.86rem;
+}
+
+.review-progress-copy span,
+.review-progress p {
+  color: var(--text-dim);
+}
+
+.review-progress-track {
+  height: 8px;
+  margin: 9px 0 8px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--chart-track);
+}
+
+.review-progress-track span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--accent);
+}
+
+.review-progress p {
+  margin: 0;
+  font-size: 0.78rem;
+}
+
 /* Tables */
 
 .table-scroll {
@@ -361,16 +413,18 @@ tr:last-child td {
 
 /* Group header rows inside the Today/Resulted tables — date and course
    separators, replacing per-row date/course columns. */
-tr.group-header-date td {
+tr.group-header-date th {
   background: var(--accent);
   color: var(--bg-card);
   font-weight: 700;
   font-size: 0.85rem;
   padding: 10px 14px;
   border-bottom: none;
+  position: static;
+  text-align: left;
 }
 
-tr.group-header-course td {
+tr.group-header-course th {
   background: var(--bg-raised);
   color: var(--text-dim);
   font-weight: 700;
@@ -379,6 +433,8 @@ tr.group-header-course td {
   letter-spacing: 0.03em;
   padding: 8px 14px;
   border-bottom: 1px solid var(--row-divider);
+  position: static;
+  text-align: left;
 }
 
 /* Numeric columns: right-aligned, tabular monospace figures so decimal
@@ -451,11 +507,24 @@ tr.group-header-course td {
     text-align: left;
   }
 
-  tr.group-header-date td,
-  tr.group-header-course td {
+  tr.group-header-date th,
+  tr.group-header-course th {
     display: block;
     width: 100%;
   }
+}
+
+.entry-row-link {
+  color: inherit;
+  font-weight: 600;
+  text-decoration-color: var(--border);
+  text-underline-offset: 2px;
+}
+
+.entry-row-link:hover,
+.entry-row-link:focus-visible {
+  color: var(--accent);
+  text-decoration-color: var(--accent);
 }
 
 .no-action-label {
@@ -529,6 +598,72 @@ a.price-marker:hover {
 .table-heading .table-subtitle {
   font-size: 0.82rem;
   color: var(--text-faint);
+}
+
+/* Record filters */
+
+.record-filters {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  padding: 14px;
+  margin: 0 0 12px;
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.record-filters label {
+  display: grid;
+  gap: 4px;
+  color: var(--text-dim);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.record-filters input,
+.record-filters select,
+.filter-reset {
+  min-width: 0;
+  min-height: 40px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg-card);
+  color: var(--text);
+  padding: 8px 10px;
+  font: inherit;
+  font-size: 0.86rem;
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+.record-filters input:focus-visible,
+.record-filters select:focus-visible,
+.filter-reset:focus-visible {
+  outline: 3px solid rgba(31, 77, 56, 0.25);
+  outline-offset: 1px;
+  border-color: var(--accent);
+}
+
+.filter-reset {
+  align-self: end;
+  cursor: pointer;
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.filter-summary {
+  margin: 0 0 8px;
+  color: var(--text-faint);
+  font-size: 0.8rem;
+}
+
+@media (max-width: 520px) {
+  .record-filters {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* Form strip */
@@ -733,6 +868,15 @@ a.price-marker:hover {
   margin-bottom: 20px;
 }
 
+.record-phase {
+  margin: 0 0 10px;
+  color: var(--text-faint);
+  font-size: 0.76rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
 .verdict-header {
   display: flex;
   align-items: baseline;
@@ -792,6 +936,45 @@ a.price-marker:hover {
 
 .principal-risk strong {
   color: var(--text);
+}
+
+.result-overlay {
+  margin: 0 0 20px;
+  padding: 18px;
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--radius);
+}
+
+.overlay-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.overlay-heading h2 {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 1rem;
+}
+
+.overlay-heading span {
+  color: var(--text-faint);
+  font-size: 0.76rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.result-overlay > p {
+  margin: 12px 0 0;
+  color: var(--text-dim);
+  font-size: 0.88rem;
 }
 
 /* Collapsible full analysis */

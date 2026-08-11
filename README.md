@@ -65,10 +65,11 @@ Both frameworks share the same shape:
 
 Every entry is permanently recorded with its framework version, the
 evidence considered, the selection, the confidence grade, the price at
-commitment and the starting price, the result, the principal risk
-identified beforehand, and a process compliance grade (A/B/C) that is
-assessed blind to the result — it grades whether the framework was
-followed properly, not whether the pick won.
+commitment and the starting price, the result, and the principal risk
+identified beforehand. A process compliance grade (A/B/C) may be added
+after a separate operator review; an ungraded entry is shown plainly as
+not yet reviewed. Compliance grades whether the framework was followed
+properly, not whether the selection won.
 
 Both frameworks are **locked**: the predictive rules cannot change on the
 back of a single result. They only change at a scheduled review (after the
@@ -85,9 +86,23 @@ Read the full text: [horse framework](horses/framework.html) ·
 - [**Greyhounds**](greyhounds/) — running record and entries browsable by
   date.
 
-Each sport keeps its own append-only `results.csv`: rows are only ever
-added, never edited or removed, so the record can't be quietly cleaned up
-after the fact.
+Each sport keeps its own permanent `results.csv`. The pre-race commitment
+fields — reasoning, selection, confidence, publication price and principal
+risk — are immutable. Approved factual overlay fields such as result,
+starting price, total runners and process-compliance status are completed
+afterward, because those facts do not exist at commitment. Rows are never
+quietly removed or rewritten to improve the record; the exceptional
+retraction and correction processes are documented publicly in the
+repository.
+
+Individual entry pages keep these two layers visibly separate: the frozen
+pre-race record is shown first, followed by result information added after
+the race.
+
+Repository maintainers can run `node scripts/validate-records.js` to check
+CSV schemas, unique IDs, manifest parity, entry-file existence, result
+labels, prices and runner counts. The staged form of the check also blocks
+removal of permanent rows and changes to immutable commitment fields.
 
 ## Language
 

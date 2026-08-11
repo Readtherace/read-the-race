@@ -53,6 +53,7 @@
   <div class="table-heading">
     <h3>Resulted</h3>
   </div>
+  <div id="record-filters"></div>
   <div id="resulted-table"></div>
 
   <div id="price-chart"></div>
@@ -84,7 +85,9 @@
     renderStats(document.getElementById("stats"), rows);
     renderFormStrip(document.getElementById("form-strip"), rows);
     renderTodayTable(document.getElementById("today-table"), rows, "track");
-    renderResultedTable(document.getElementById("resulted-table"), rows, "track");
+    renderRecordFilters(document.getElementById("record-filters"), rows, "track", (filters) => {
+      renderResultedTable(document.getElementById("resulted-table"), rows, "track", filters);
+    });
     renderPriceBandChart(document.getElementById("price-chart"), rows);
     renderConfidenceChart(document.getElementById("confidence-chart"), rows);
 

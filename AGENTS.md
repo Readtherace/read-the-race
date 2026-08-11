@@ -111,6 +111,12 @@ read-the-race/
     re-check rather than a silent default to "no qualifying action."
     Confirm with the operator before overriding if there's any doubt.
     (See CORRECTIONS.md, 5 August 2026, for the incident this closes.)
+7b. **Run `node scripts/validate-records.js` before committing.** The
+    validator checks schemas, unique IDs, CSV/manifest parity, entry-file
+    existence, result labels, prices and runner counts. Its `--staged`
+    mode also blocks removal of permanent rows, edits to frozen entry
+    Markdown, and changes to immutable commitment fields; the tracked
+    pre-commit safeguard invokes this mode automatically.
 8. **Once the result is known**, fill in `result`, `total_runners` (the
    number that actually started), and `starting_price` if available in the
    CSV row and the manifest.json entry only. **Never

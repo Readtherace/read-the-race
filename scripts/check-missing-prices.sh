@@ -16,6 +16,8 @@
 
 MARKER="Not available in the source data at commitment"
 
+node scripts/validate-records.js --staged || exit 1
+
 if [ "$ALLOW_MISSING_PRICE" = "1" ]; then
   exit 0
 fi
