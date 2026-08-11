@@ -30,7 +30,7 @@ function classifyResult(result) {
   const r = (result || "").trim().toLowerCase();
   if (!r) return "pending";
   if (r.includes("no qualifying")) return "no-action";
-  if (r.includes("void") || r.includes("non-runner") || r.includes("nonrunner") || r.includes("non runner")) return "void";
+  if (/^nr\b/.test(r) || r.includes("void") || r.includes("non-runner") || r.includes("nonrunner") || r.includes("non runner")) return "void";
   if (/^(win|won|1st)\b/.test(r)) return "win";
   return "lose";
 }

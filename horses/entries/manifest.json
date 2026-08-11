@@ -4,427 +4,549 @@
     "venue": "Goodwood",
     "time": "13:50",
     "file": "2026/08-01/goodwood-1350.md",
-    "result": "Lost"
+    "result": "5th",
+    "starting_price": "3.5",
+    "total_runners": 13
   },
   {
     "date": "2026-08-01",
     "venue": "Goodwood",
     "time": "14:25",
     "file": "2026/08-01/goodwood-1425.md",
-    "result": "Lost"
+    "result": "3rd",
+    "starting_price": "5.5",
+    "total_runners": 8
   },
   {
     "date": "2026-08-01",
     "venue": "Goodwood",
     "time": "15:00",
     "file": "2026/08-01/goodwood-1500.md",
-    "result": "Lost"
+    "result": "3rd",
+    "starting_price": "3.25",
+    "total_runners": 6
   },
   {
     "date": "2026-08-01",
     "venue": "Goodwood",
     "time": "15:35",
     "file": "2026/08-01/goodwood-1535.md",
-    "result": "Lost"
+    "result": "27th",
+    "starting_price": "6.5",
+    "total_runners": 27
   },
   {
     "date": "2026-08-01",
     "venue": "Goodwood",
     "time": "16:10",
     "file": "2026/08-01/goodwood-1610.md",
-    "result": "Lost"
+    "result": "7th",
+    "starting_price": "7.5",
+    "total_runners": 13
   },
   {
     "date": "2026-08-01",
     "venue": "Goodwood",
     "time": "16:45",
     "file": "2026/08-01/goodwood-1645.md",
-    "result": "Lost"
+    "result": "13th",
+    "starting_price": "2.63",
+    "total_runners": 13
   },
   {
     "date": "2026-08-01",
     "venue": "Goodwood",
     "time": "17:20",
     "file": "2026/08-01/goodwood-1720.md",
-    "result": "Won"
+    "result": "Won",
+    "starting_price": "4.33",
+    "total_runners": 15
   },
   {
     "date": "2026-08-02",
     "venue": "Galway",
     "time": "13:50",
     "file": "2026/08-02/galway-1350.md",
-    "result": "Won"
+    "result": "Won",
+    "starting_price": "4.5",
+    "total_runners": 17
   },
   {
     "date": "2026-08-02",
     "venue": "Galway",
     "time": "14:20",
     "file": "2026/08-02/galway-1420.md",
-    "result": "Unplaced"
+    "result": "5th",
+    "starting_price": "9",
+    "total_runners": 18
   },
   {
     "date": "2026-08-02",
     "venue": "Galway",
     "time": "14:55",
     "file": "2026/08-02/galway-1455.md",
-    "result": "Unplaced"
+    "result": "PU",
+    "starting_price": "6",
+    "total_runners": 18
   },
   {
     "date": "2026-08-02",
     "venue": "Galway",
     "time": "15:30",
     "file": "2026/08-02/galway-1530.md",
-    "result": "Unplaced"
+    "result": "11th",
+    "starting_price": "6.5",
+    "total_runners": 11
   },
   {
     "date": "2026-08-02",
     "venue": "Galway",
     "time": "16:00",
     "file": "2026/08-02/galway-1600.md",
-    "result": "Unplaced"
+    "result": "11th",
+    "starting_price": "11",
+    "total_runners": 14
   },
   {
     "date": "2026-08-02",
     "venue": "Galway",
     "time": "16:30",
     "file": "2026/08-02/galway-1630.md",
-    "result": "Unplaced"
+    "result": "5th",
+    "starting_price": "4",
+    "total_runners": 10
   },
   {
     "date": "2026-08-02",
     "venue": "Galway",
     "time": "17:00",
     "file": "2026/08-02/galway-1700.md",
-    "result": "Unplaced"
+    "result": "5th",
+    "starting_price": "4.5",
+    "total_runners": 11
   },
   {
     "date": "2026-08-02",
     "venue": "Galway",
     "time": "17:30",
     "file": "2026/08-02/galway-1730.md",
-    "result": "2nd"
+    "result": "2nd",
+    "starting_price": "1.18",
+    "total_runners": 6
   },
   {
     "date": "2026-08-02",
     "venue": "Chester",
     "time": "14:10",
     "file": "2026/08-02/chester-1410.md",
-    "result": "Unplaced"
+    "result": "7th",
+    "starting_price": "3.75",
+    "total_runners": 7
   },
   {
     "date": "2026-08-02",
     "venue": "Chester",
     "time": "14:45",
     "file": "2026/08-02/chester-1445.md",
-    "result": "Won"
+    "result": "Won",
+    "starting_price": "1.44",
+    "total_runners": 5
   },
   {
     "date": "2026-08-02",
     "venue": "Chester",
     "time": "15:20",
     "file": "2026/08-02/chester-1520.md",
-    "result": "2nd"
+    "result": "2nd",
+    "starting_price": "2.2",
+    "total_runners": 9
   },
   {
     "date": "2026-08-02",
     "venue": "Chester",
     "time": "15:52",
     "file": "2026/08-02/chester-1552.md",
-    "result": "Won"
+    "result": "Won",
+    "starting_price": "2",
+    "total_runners": 10
   },
   {
     "date": "2026-08-02",
     "venue": "Chester",
     "time": "16:22",
     "file": "2026/08-02/chester-1622.md",
-    "result": "Won"
+    "result": "Won",
+    "starting_price": "2.63",
+    "total_runners": 6
   },
   {
     "date": "2026-08-02",
     "venue": "Chester",
     "time": "16:52",
     "file": "2026/08-02/chester-1652.md",
-    "result": "Unplaced"
+    "result": "4th",
+    "starting_price": "5",
+    "total_runners": 9
   },
   {
     "date": "2026-08-03",
     "venue": "Ripon",
     "time": "14:24",
     "file": "2026/08-03/ripon-1424.md",
-    "result": "2nd"
+    "result": "2nd",
+    "starting_price": "2.25",
+    "total_runners": 4
   },
   {
     "date": "2026-08-03",
     "venue": "Ripon",
     "time": "14:54",
     "file": "2026/08-03/ripon-1454.md",
-    "result": "Unplaced"
+    "result": "4th",
+    "starting_price": "1.62",
+    "total_runners": 6
   },
   {
     "date": "2026-08-03",
     "venue": "Ripon",
     "time": "15:24",
     "file": "2026/08-03/ripon-1524.md",
-    "result": "Unplaced"
+    "result": "4th",
+    "starting_price": "4.33",
+    "total_runners": 5
   },
   {
     "date": "2026-08-03",
     "venue": "Ripon",
     "time": "15:54",
     "file": "2026/08-03/ripon-1554.md",
-    "result": "Won"
+    "result": "Won",
+    "starting_price": "3.75",
+    "total_runners": 7
   },
   {
     "date": "2026-08-03",
     "venue": "Ripon",
     "time": "16:24",
     "file": "2026/08-03/ripon-1624.md",
-    "result": "Unplaced"
+    "result": "4th",
+    "starting_price": "4.5",
+    "total_runners": 5
   },
   {
     "date": "2026-08-03",
     "venue": "Ripon",
     "time": "16:54",
     "file": "2026/08-03/ripon-1654.md",
-    "result": "3rd"
+    "result": "3rd",
+    "starting_price": "4.33",
+    "total_runners": 7
   },
   {
     "date": "2026-08-03",
     "venue": "Naas",
     "time": "14:17",
     "file": "2026/08-03/naas-1417.md",
-    "result": "Won"
+    "result": "Won",
+    "starting_price": "1.44",
+    "total_runners": 5
   },
   {
     "date": "2026-08-03",
     "venue": "Naas",
     "time": "14:47",
     "file": "2026/08-03/naas-1447.md",
-    "result": "Unplaced"
+    "result": "8th",
+    "starting_price": "8",
+    "total_runners": 11
   },
   {
     "date": "2026-08-03",
     "venue": "Naas",
     "time": "15:17",
     "file": "2026/08-03/naas-1517.md",
-    "result": "Won"
+    "result": "Won",
+    "starting_price": "8.5",
+    "total_runners": 15
   },
   {
     "date": "2026-08-03",
     "venue": "Naas",
     "time": "15:47",
     "file": "2026/08-03/naas-1547.md",
-    "result": "Unplaced"
+    "result": "12th",
+    "starting_price": "6",
+    "total_runners": 16
   },
   {
     "date": "2026-08-03",
     "venue": "Naas",
     "time": "16:17",
     "file": "2026/08-03/naas-1617.md",
-    "result": "Unplaced"
+    "result": "5th",
+    "starting_price": "5.5",
+    "total_runners": 11
   },
   {
     "date": "2026-08-03",
     "venue": "Naas",
     "time": "16:47",
     "file": "2026/08-03/naas-1647.md",
-    "result": "Won"
+    "result": "Won",
+    "starting_price": "1.67",
+    "total_runners": 11
   },
   {
     "date": "2026-08-03",
     "venue": "Naas",
     "time": "17:20",
     "file": "2026/08-03/naas-1720.md",
-    "result": "2nd"
+    "result": "2nd",
+    "starting_price": "3",
+    "total_runners": 17
   },
   {
     "date": "2026-08-05",
     "venue": "Sligo",
     "time": "17:30",
     "file": "2026/08-05/sligo-1730.md",
-    "result": "Unplaced"
+    "result": "7th",
+    "starting_price": "4.33",
+    "total_runners": 14
   },
   {
     "date": "2026-08-05",
     "venue": "Sligo",
     "time": "18:00",
     "file": "2026/08-05/sligo-1800.md",
-    "result": "Won"
+    "result": "Won",
+    "starting_price": "2.63",
+    "total_runners": 5
   },
   {
     "date": "2026-08-05",
     "venue": "Sligo",
     "time": "18:30",
     "file": "2026/08-05/sligo-1830.md",
-    "result": "Won"
+    "result": "Won",
+    "starting_price": "2.00",
+    "total_runners": 11
   },
   {
     "date": "2026-08-05",
     "venue": "Sligo",
     "time": "19:00",
     "file": "2026/08-05/sligo-1900.md",
-    "result": "Unplaced"
+    "result": "5th",
+    "starting_price": "17.00",
+    "total_runners": 12
   },
   {
     "date": "2026-08-05",
     "venue": "Sligo",
     "time": "19:30",
     "file": "2026/08-05/sligo-1930.md",
-    "result": "Unplaced"
+    "result": "5th",
+    "starting_price": "5.00",
+    "total_runners": 12
   },
   {
     "date": "2026-08-05",
     "venue": "Sligo",
     "time": "20:00",
     "file": "2026/08-05/sligo-2000.md",
-    "result": "Unplaced"
+    "result": "6th",
+    "starting_price": "3.00",
+    "total_runners": 10
   },
   {
     "date": "2026-08-05",
     "venue": "Sligo",
     "time": "20:30",
     "file": "2026/08-05/sligo-2030.md",
-    "result": "Unplaced"
+    "result": "5th",
+    "starting_price": "7.50",
+    "total_runners": 14
   },
   {
     "date": "2026-08-05",
     "venue": "Yarmouth",
     "time": "17:40",
     "file": "2026/08-05/yarmouth-1740.md",
-    "result": "2nd"
+    "result": "2nd",
+    "starting_price": "4.50",
+    "total_runners": 7
   },
   {
     "date": "2026-08-05",
     "venue": "Yarmouth",
     "time": "18:10",
     "file": "2026/08-05/yarmouth-1810.md",
-    "result": "Won"
+    "result": "Won",
+    "starting_price": "1.83",
+    "total_runners": 10
   },
   {
     "date": "2026-08-05",
     "venue": "Yarmouth",
     "time": "18:40",
     "file": "2026/08-05/yarmouth-1840.md",
-    "result": "3rd"
+    "result": "3rd",
+    "starting_price": "3.75",
+    "total_runners": 5
   },
   {
     "date": "2026-08-05",
     "venue": "Yarmouth",
     "time": "19:10",
     "file": "2026/08-05/yarmouth-1910.md",
-    "result": "2nd"
+    "result": "2nd",
+    "starting_price": "1.62",
+    "total_runners": 5
   },
   {
     "date": "2026-08-05",
     "venue": "Yarmouth",
     "time": "19:40",
     "file": "2026/08-05/yarmouth-1940.md",
-    "result": "3rd"
+    "result": "3rd",
+    "starting_price": "2.50",
+    "total_runners": 7
   },
   {
     "date": "2026-08-05",
     "venue": "Yarmouth",
     "time": "20:10",
     "file": "2026/08-05/yarmouth-2010.md",
-    "result": "Unplaced"
+    "result": "4th",
+    "starting_price": "2.63",
+    "total_runners": 6
   },
   {
     "date": "2026-08-08",
     "venue": "Haydock",
     "time": "13:50",
     "file": "2026/08-08/haydock-1350.md",
-    "result": "3rd"
+    "result": "3rd",
+    "starting_price": "1.4",
+    "total_runners": 5
   },
   {
     "date": "2026-08-08",
     "venue": "Haydock",
     "time": "14:25",
     "file": "2026/08-08/haydock-1425.md",
-    "result": "Won"
+    "result": "Won",
+    "starting_price": "1.5",
+    "total_runners": 4
   },
   {
     "date": "2026-08-08",
     "venue": "Haydock",
     "time": "15:00",
     "file": "2026/08-08/haydock-1500.md",
-    "result": "3rd"
+    "result": "3rd",
+    "starting_price": "2.38",
+    "total_runners": 10
   },
   {
     "date": "2026-08-08",
     "venue": "Haydock",
     "time": "15:34",
     "file": "2026/08-08/haydock-1534.md",
-    "result": "2nd"
+    "result": "2nd",
+    "starting_price": "3.5",
+    "total_runners": 6
   },
   {
     "date": "2026-08-08",
     "venue": "Haydock",
     "time": "16:09",
     "file": "2026/08-08/haydock-1609.md",
-    "result": "Won"
+    "result": "Won",
+    "starting_price": "5.0",
+    "total_runners": 8
   },
   {
     "date": "2026-08-08",
     "venue": "Haydock",
     "time": "16:40",
     "file": "2026/08-08/haydock-1640.md",
-    "result": "3rd"
+    "result": "3rd",
+    "starting_price": "12.0",
+    "total_runners": 13
   },
   {
     "date": "2026-08-08",
     "venue": "Haydock",
     "time": "17:10",
     "file": "2026/08-08/haydock-1710.md",
-    "result": "5th"
+    "result": "5th",
+    "starting_price": "4.0",
+    "total_runners": 6
   },
   {
     "date": "2026-08-08",
     "venue": "Newmarket (July)",
     "time": "13:55",
     "file": "2026/08-08/newmarket-july-1355.md",
-    "result": "2nd"
+    "result": "2nd",
+    "starting_price": "2.5",
+    "total_runners": 7
   },
   {
     "date": "2026-08-08",
     "venue": "Newmarket (July)",
     "time": "14:30",
     "file": "2026/08-08/newmarket-july-1430.md",
-    "result": "Won"
+    "result": "Won",
+    "starting_price": "8.5",
+    "total_runners": 7
   },
   {
     "date": "2026-08-08",
     "venue": "Newmarket (July)",
     "time": "15:05",
     "file": "2026/08-08/newmarket-july-1505.md",
-    "result": "No qualifying action — race resulted, no selection made."
+    "result": "No qualifying action — race resulted, no selection made.",
+    "starting_price": "",
+    "total_runners": 6
   },
   {
     "date": "2026-08-08",
     "venue": "Newmarket (July)",
     "time": "15:40",
     "file": "2026/08-08/newmarket-july-1540.md",
-    "result": "7th"
+    "result": "7th",
+    "starting_price": "3.75",
+    "total_runners": 10
   },
   {
     "date": "2026-08-08",
     "venue": "Newmarket (July)",
     "time": "16:14",
     "file": "2026/08-08/newmarket-july-1614.md",
-    "result": "6th"
+    "result": "6th",
+    "starting_price": "3.5",
+    "total_runners": 6
   },
   {
     "date": "2026-08-08",
     "venue": "Newmarket (July)",
     "time": "16:50",
     "file": "2026/08-08/newmarket-july-1650.md",
-    "result": "4th"
+    "result": "4th",
+    "starting_price": "4.5",
+    "total_runners": 6
   },
   {
     "date": "2026-08-08",
     "venue": "Newmarket (July)",
     "time": "17:23",
     "file": "2026/08-08/newmarket-july-1723.md",
-    "result": "2nd"
+    "result": "2nd",
+    "starting_price": "2.38",
+    "total_runners": 6
   },
   {
     "date": "2026-08-09",
@@ -512,7 +634,7 @@
     "venue": "Leicester",
     "time": "16:44",
     "file": "2026/08-09/leicester-1644.md",
-    "result": "Non-runner",
+    "result": "NR",
     "starting_price": "",
     "total_runners": 4
   },
