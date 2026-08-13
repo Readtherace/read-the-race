@@ -646,5 +646,122 @@
     "result": "4th",
     "starting_price": "5.0",
     "total_runners": 6
+  },
+  {
+    "date": "2026-08-13",
+    "venue": "Tramore",
+    "time": "17:11",
+    "file": "2026/08-13/tramore-1711.md",
+    "result": "",
+    "starting_price": "",
+    "total_runners": 6
+  },
+  {
+    "date": "2026-08-13",
+    "venue": "Tramore",
+    "time": "17:46",
+    "file": "2026/08-13/tramore-1746.md",
+    "result": "",
+    "starting_price": "",
+    "total_runners": 9
+  },
+  {
+    "date": "2026-08-13",
+    "venue": "Tramore",
+    "time": "18:18",
+    "file": "2026/08-13/tramore-1818.md",
+    "result": "",
+    "starting_price": "",
+    "total_runners": 12
+  },
+  {
+    "date": "2026-08-13",
+    "venue": "Tramore",
+    "time": "18:48",
+    "file": "2026/08-13/tramore-1848.md",
+    "result": "",
+    "starting_price": "",
+    "total_runners": 6
+  },
+  {
+    "date": "2026-08-13",
+    "venue": "Tramore",
+    "time": "19:18",
+    "file": "2026/08-13/tramore-1918.md",
+    "result": "",
+    "starting_price": "",
+    "total_runners": 7
+  },
+  {
+    "date": "2026-08-13",
+    "venue": "Tramore",
+    "time": "19:48",
+    "file": "2026/08-13/tramore-1948.md",
+    "result": "",
+    "starting_price": "",
+    "total_runners": 15
+  },
+  {
+    "date": "2026-08-13",
+    "venue": "Tramore",
+    "time": "20:18",
+    "file": "2026/08-13/tramore-2018.md",
+    "result": "",
+    "starting_price": "",
+    "total_runners": 10
+  },
+  {
+    "date": "2026-08-13",
+    "venue": "Windsor",
+    "time": "17:36",
+    "file": "2026/08-13/windsor-1736.md",
+    "result": "",
+    "starting_price": "",
+    "total_runners": 11
+  },
+  {
+    "date": "2026-08-13",
+    "venue": "Windsor",
+    "time": "18:11",
+    "file": "2026/08-13/windsor-1811.md",
+    "result": "",
+    "starting_price": "",
+    "total_runners": 11
+  },
+  {
+    "date": "2026-08-13",
+    "venue": "Windsor",
+    "time": "18:41",
+    "file": "2026/08-13/windsor-1841.md",
+    "result": "",
+    "starting_price": "",
+    "total_runners": 8
+  },
+  {
+    "date": "2026-08-13",
+    "venue": "Windsor",
+    "time": "19:11",
+    "file": "2026/08-13/windsor-1911.md",
+    "result": "",
+    "starting_price": "",
+    "total_runners": 6
+  },
+  {
+    "date": "2026-08-13",
+    "venue": "Windsor",
+    "time": "19:41",
+    "file": "2026/08-13/windsor-1941.md",
+    "result": "",
+    "starting_price": "",
+    "total_runners": 8
+  },
+  {
+    "date": "2026-08-13",
+    "venue": "Windsor",
+    "time": "20:11",
+    "file": "2026/08-13/windsor-2011.md",
+    "result": "",
+    "starting_price": "",
+    "total_runners": 4
   }
 ]
