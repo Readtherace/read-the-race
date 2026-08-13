@@ -297,7 +297,7 @@ function raceTableHead(showTotalRunners, caption) {
 </colgroup>
 <caption class="sr-only">${mdEscape(caption || "Race record")}</caption>
 <thead><tr>
-  <th scope="col">Race Time</th><th scope="col">Selection</th><th scope="col"><span class="header-line">Price at</span><span class="header-line">publication</span></th><th scope="col">Starting Price</th><th scope="col"><span class="header-line">Each-way</span><span class="header-line">price test</span></th><th scope="col">Result</th>${showTotalRunners ? '<th scope="col"><span class="header-line">Total</span><span class="header-line">runners</span></th>' : ""}<th scope="col">Confidence</th>
+  <th scope="col">Race Time</th><th scope="col">Selection</th><th scope="col"><span class="header-line">Price at</span><span class="header-line">publication</span></th><th scope="col"><span class="header-line">Starting</span><span class="header-line">price</span></th><th scope="col"><span class="header-line">Each-way</span><span class="header-line">price test</span></th><th scope="col">Result</th>${showTotalRunners ? '<th scope="col"><span class="header-line">Total</span><span class="header-line">runners</span></th>' : ""}<th scope="col">Confidence</th>
 </tr></thead>`;
 }
 

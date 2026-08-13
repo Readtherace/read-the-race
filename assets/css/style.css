@@ -354,21 +354,21 @@ table {
    640px breakpoint — below it the table becomes a stacked card layout and
    these are ignored. */
 col.col-time { width: 9%; }
-col.col-selection { width: 23%; }
-col.col-price { width: 14%; }
-col.col-sp { width: 13%; }
-col.col-ew { width: 9%; }
-col.col-result { width: 14%; }
-col.col-conf { width: 18%; }
+col.col-selection { width: 24%; }
+col.col-price { width: 13%; }
+col.col-sp { width: 12%; }
+col.col-ew { width: 14%; }
+col.col-result { width: 11%; }
+col.col-conf { width: 17%; }
 
 table.with-total-runners col.col-time { width: 8%; }
 table.with-total-runners col.col-selection { width: 19%; }
-table.with-total-runners col.col-price { width: 14%; }
+table.with-total-runners col.col-price { width: 13%; }
 table.with-total-runners col.col-sp { width: 12%; }
-table.with-total-runners col.col-ew { width: 8%; }
-table.with-total-runners col.col-result { width: 12%; }
+table.with-total-runners col.col-ew { width: 13%; }
+table.with-total-runners col.col-result { width: 9%; }
 table.with-total-runners col.col-runners { width: 11%; }
-table.with-total-runners col.col-conf { width: 16%; }
+table.with-total-runners col.col-conf { width: 15%; }
 
 th, td {
   text-align: left;
